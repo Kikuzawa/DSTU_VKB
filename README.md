@@ -10,20 +10,22 @@
 
 # Лабораторные работы по предметам:
 
-- Языки программирования (Python - 2 курс, Java - 2 курс, С# - 3 курс)
-- Основы информационной безопасности (Python - 2 курс)
-- Дискретная математика (Python - 2 курс)
-- Алгоритмы и структуры данных (Python - 1 курс)
-- Ознакомительная практика (Python - 1 курс)
-- Формальные языки (Python, Java - 2 курс)
-- Теория вероятностей и математическая статистика (Python - 2 курс)
-- Аппаратные средства вычислительной техники (С++ (Arduino), assembly - 2 курс, 3 курс)
-- Операционные системы (CMD, powershell, bash - 3 курс)
-- Компьютерные сети (CISCO Packet tracker - 3 курс)
-- Вычислительные методы в алгебре и теории чисел (Mathcad - 3 курс)
-- Теория информации (C# (Windows Forms) - 3 курс)
+- Алгоритмы и структуры данных (Python - 1 курс) -> `Algorithms_and_Data_Structures`
+- Информатика (Python (немного) - 1 курс) -> `Informatics`
+- Информационные технологии (немного MatLab - 1 курс) -> `Information technology`
+- Ознакомительная практика (Python - 1 курс) -> `Practice_1_course`
+- Основы информационной безопасности (Python, CMD - 2 курс) -> `Base_of_Information_Security`
+- Дискретная математика (Python - 2 курс) -> `Discrete_Mathematic`
+- Формальные языки (Python, Java - 2 курс) -> `Formal_Languages`
+- Теория вероятностей и математическая статистика (Python - 2 курс) -> `Theory_of_Probability_and_mathematical_statistics`
+- Языки программирования (Python - 2 курс, Java - 2 курс, С# - 3 курс) -> `Programming_Languages`
+- Аппаратные средства вычислительной техники (С++ (Arduino), assembly - 2 курс, 3 курс) -> `Computer_hardware`
+- Операционные системы (CMD, powershell, bash - 3 курс) -> `Operation_Systems`
+- Компьютерные сети (CISCO Packet tracker - 3 курс) -> `Computer_Networks`
+- Вычислительные методы в алгебре и теории чисел (Mathcad - 3 курс) -> `Algebra_(Mathcad)`
+- Теория информации (C# (Windows Forms) - 3 курс) -> `Theory_Of_Information`
+- Машинное обучение (искусственный интеллект) - Курс повышения квалификации от ДГТУ (3 курс) -> `Machine_Leaning_(AI)`
 
-`Позже добавлю теги по директориям`
 
 # Ошибки и проблемы
 
@@ -40,3 +42,4 @@
 
 ---
 ![GitHub repo size](https://img.shields.io/github/repo-size/Kikuzawa/DSTU_VKB)
+
