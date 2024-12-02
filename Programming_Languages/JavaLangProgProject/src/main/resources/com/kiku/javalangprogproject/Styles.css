@@ -1,0 +1,131 @@
+
+
+#pane {
+    -fx-background-color: #f5f5dc;
+    -fx-background-radius: 30;
+
+}
+
+#paneReport {
+    -fx-background-color: #f5f5dc;
+    -fx-border-color: #000000;
+    -fx-border-width: 1;
+    -fx-border-insets: 0;
+}
+
+
+/*noinspection ALL*/
+.text-area {
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-width: 2;
+    -fx-border-color: #c6c6c6;
+}
+
+/*noinspection ALL*/
+.text-area .viewport{
+    -fx-background-color: transparent;
+}
+
+/*noinspection ALL*/
+.text-area .content {
+    -fx-background-color: peachpuff ;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    text-area-border: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+
+/*noinspection ALL*/
+.some-node {
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+
+
+.button {
+    -fx-background-color: #4CAF50; /* Цвет фона кнопки */
+    -fx-text-fill: white; /* Цвет текста */
+    -fx-background-radius: 20; /* Радиус закругления кнопки */
+}
+
+.button:hover {
+    -fx-background-color: #29882e; /* Цвет фона кнопки при наведении */
+}
+
+
+/*noinspection ALL*/
+.table-view {
+    -fx-border-color: #000000; /* Цвет границы таблицы */
+    -fx-background-radius: 20; /* Радиус закругления TableView */
+}
+
+/*noinspection ALL*/
+.table-row-cell:selected {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+/*noinspection ALL*/
+.table-row-cell:hover {
+    -fx-background-color: #d9ffb4;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+/*noinspection ALL*/
+.text-field {
+    -fx-background-color: #ffffff; /* Цвет фона текстового поля */
+    -fx-border-color: #000000; /* Цвет границы текстового поля */
+    -fx-background-radius: 20; /* Радиус закругления текстового поля */
+}
+
+/* Стилизация ComboBox */
+/*noinspection ALL*/
+.combo-box {
+    -fx-background-color: white; /* Цвет фона ComboBox */
+    -fx-border-color: #000000; /* Цвет границы ComboBox */
+    -fx-background-radius: 20; /* Радиус закругления ComboBox */
+}
+
+
+/*noinspection ALL*/
+.label, .text-field, .combo-box {
+    -fx-text-fill: #4CAF50; /* Акцентный цвет - салатовый */
+    -fx-font-weight: bold; /* Жирный шрифт */
+    -fx-background-radius: 20;
+}
+
+
+/*noinspection ALL*/
+.table-view{
+
+    -fx-border-color: #000000; /* Цвет границы таблицы */
+}
+
+/*noinspection ALL*/
+.table-row-cell:selected {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+/*noinspection ALL*/
+.table-row-cell:hover {
+    -fx-background-color: #d9ffb4;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+/*noinspection ALL*/
+.password-field {
+    -fx-background-color: #ffffff; /* Цвет фона поля ввода пароля */
+    -fx-border-color: #000000; /* Цвет границы поля ввода пароля */
+    -fx-background-radius: 20; /* Радиус закругления поля ввода пароля */
+}
+
+
