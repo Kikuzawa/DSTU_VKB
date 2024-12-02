@@ -39,4 +39,5 @@ String HOST = "127.0.0.1";
 Формат таблицы: #TODO
 
 Скриншот интерфейса:
+
 ![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Formal_Languages/Photo/screenshot_02122024_095953.png)
