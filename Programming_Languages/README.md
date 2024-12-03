@@ -114,9 +114,29 @@ Gradle: 9.0
 
 ### Проект
 
-
 Предметная область № 9: ресторан.
 Ресторан предоставляет для своих клиентов услугу питания. На каждый день составляется меню, которое включает в себя список блюд для питания. На основе этого меню составляется список для закупки необходимых продуктов питания, входящих в состав блюд. Клиент, приехав в ресторан, выбирает из меню блюда, которые он хотел бы заказать, их готовят, если они заранее не были готовы, и приносят клиенту. В качестве дополнительной услуги ресторан может организовать развлекательные программы в своем помещении. По результатам своей деятельности ресторан производит отчисления в налоговые органы и предоставляет отчетность в органы государственной статистики.
+
+#### Некоторые скриншоты
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-41-59.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-03.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-06.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-08.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-12.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-15.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-17.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Programming_Languages/Screenshots/photo_2024-12-03_16-42-20.jpg)
+
+
+
 
 
 # Примечание
