@@ -41,7 +41,7 @@
 # Примечание
 
 В папке `Задания_Tasks` содержатся файл с заданиями для лабораторных работ по Assembler, Arduino не нашел, смотрите отчет.
-Есть отчет по Arduino `Report_Labs_Arduino_Computer_hardware.docx` и `Report_Project_Arduino.docx`. По Assebler отчета нет :). 
+Есть отчет по Arduino `Report_Labs_Arduino_Computer_hardware.docx` и `Report_Project_Arduino.docx`. По Assebler отчета только за 5 семестр `Report_Labs_Asm_Computer_hardware_5_semestr.docx`. 
 в папках `X lab` хранятся файлы-исходники от лабораторных работ именно по Assembler. Для Arduino исходников нет, только отчет.
 
 Запускались на emu8086. В lab7 необходимо компелировать код в exe файл, который потом нужно запустить в DosBox
