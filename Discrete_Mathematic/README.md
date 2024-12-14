@@ -43,15 +43,15 @@ WWWWWWWWWGGGGGGGGGRRRRRRRRRBBBBBBBBBOOOOOOOOOYYYYYYYYY
 
 
 ```
-		  W    W    W
-		  W    W    W
-		  W    W    W
+	  W    W    W
+	  W    W    W
+	  W    W    W
 G   G   G R    R    R B    B    B O    O    O
 G   G   G R    R    R B    B    B O    O    O
 G   G   G R    R    R B    B    B O    O    O
-		  Y    Y    Y
-		  Y    Y    Y
-		  Y    Y    Y
+	  Y    Y    Y
+	  Y    Y    Y
+	  Y    Y    Y
 ```
 
 
