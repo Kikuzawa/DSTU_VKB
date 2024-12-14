@@ -44,7 +44,6 @@
 Это задачи для себя
 
  - Машинное обучение (3 курс, 5 семестр)
- - Информационные технологии
 
 ---
 ![GitHub repo size](https://img.shields.io/github/repo-size/Kikuzawa/DSTU_VKB)
