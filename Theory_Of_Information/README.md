@@ -32,8 +32,13 @@
 
 ## 4 лабораторная работа
 
-![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Theory_Of_Information/Screenshots/)
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Theory_Of_Information/Screenshots/photo_2024-12-14_10-25-03.jpg)
 
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Theory_Of_Information/Screenshots/photo_2024-12-14_10-25-09.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Theory_Of_Information/Screenshots/photo_2024-12-14_10-25-12.jpg)
+
+![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Theory_Of_Information/Screenshots/photo_2024-12-14_10-25-16.jpg)
 # Примечание
 В папке `Задания_Tasks` содержатся файлы с заданиями для лабораторных работ.
 в папках `laboratoryX` хранятся сами проекты лабораторных работ
