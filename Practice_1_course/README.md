@@ -38,6 +38,7 @@
 Есть отчет по практике, связанный с этой программной реализацией `Report_Practice_1_cource.docx`
 	
 ⬇️ интерфейс программы в консоли ⬇️
+
 ![image](https://github.com/Kikuzawa/DSTU_VKB/blob/main/Practice_1_course/screenshot/screenshot_14122024_092218.png)
 
 
