@@ -1,0 +1,102 @@
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\bin\Debug\KikuzawaRestaurant.exe.config
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\bin\Debug\KikuzawaRestaurant.exe
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\bin\Debug\KikuzawaRestaurant.pdb
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.csproj.AssemblyReference.cache
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmChangePass.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmUpdateTax.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmUpElectronicCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmUpProducts.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.ufrmCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.ufrmEmployee.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmAddElectronicCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmAddUsers.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.frmDeveloper.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.frmLogin.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmModification.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmOrder.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.frmParent.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmPopupChange.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmProdType.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmProductReg.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmReceiptPreview.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmRegEmp.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmSettlement.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmSplash.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.frmTheTables.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Forms.orderInfo.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmFreezeItem.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.btnCancel.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmUnFreezeItem.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVCashierReport.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVDetailsSettlement.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVFreezeItems.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewElectronicCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewEmployees.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewLogHistory.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewOrderInfo.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewOrderSettlement.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewProducts.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewProductTypes.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewTax.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewUsers.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVNetSales.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVTaxSales.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.Properties.Resources.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.csproj.GenerateResource.cache
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.csproj.CoreCompileInputs.cache
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.exe
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\Cindy Restaurant\obj\Debug\KikuzawaRestaurant.pdb
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\bin\Debug\KikuzawaRestaurant.exe.config
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\bin\Debug\KikuzawaRestaurant.exe
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\bin\Debug\KikuzawaRestaurant.pdb
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.csproj.AssemblyReference.cache
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmChangePass.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmUpdateTax.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmUpElectronicCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.frmUpProducts.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.ufrmCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Folder_Updates.ufrmEmployee.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmAddElectronicCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmAddUsers.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.frmDeveloper.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.frmLogin.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmModification.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmOrder.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.frmParent.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmPopupChange.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmProdType.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmProductReg.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmReceiptPreview.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmRegEmp.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmSettlement.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmSplash.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.frmTheTables.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Forms.orderInfo.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmFreezeItem.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.btnCancel.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmUnFreezeItem.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVCashierReport.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVDetailsSettlement.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVFreezeItems.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewElectronicCurrency.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewEmployees.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewLogHistory.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewOrderInfo.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewOrderSettlement.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewProducts.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewProductTypes.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewTax.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmViewUsers.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVNetSales.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Form_View.frmVTaxSales.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.Properties.Resources.resources
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.csproj.GenerateResource.cache
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.csproj.CoreCompileInputs.cache
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.exe
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\obj\Debug\KikuzawaRestaurant.pdb
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\bin\Debug\DB\candyDB.mdf
+C:\Users\5555k\Documents\GitHub\DSTU\CSharp\restaurant-managent-kikuzawa\KikuzawaRestaurant\bin\Debug\DB\candyDB_log.ldf

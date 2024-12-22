@@ -1,0 +1,99 @@
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\bin\Debug\Cindy Restaurant.exe.config
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\bin\Debug\Cindy Restaurant.exe
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\bin\Debug\Cindy Restaurant.pdb
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.csprojResolveAssemblyReference.cache
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.frmLogin.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.frmParent.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Properties.Resources.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.csproj.GenerateResource.Cache
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.exe
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.pdb
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.frmDeveloper.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmTheTables.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.orderInfo.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmSplash.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmOrder.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmRegEmp.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmAddUsers.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmReceiptPreview.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmCurrency.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmProdType.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmProductReg.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmPopupChange.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.ufrmCurrency.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewCurrency.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmChangePass.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmUpdateTax.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewTax.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmAddElectronicCurrency.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmUpElectronicCurrency.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewElectronicCurrency.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewLogHistory.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewProducts.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewUsers.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewProductTypes.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmSettlement.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.btnCancel.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewOrderSettlement.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewEmployees.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.ufrmEmployee.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmModification.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewOrderInfo.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmUpProducts.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmFreezeItem.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmUnFreezeItem.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVCashierReport.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVDetailsSettlement.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVFreezeItems.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVNetSales.resources
+C:\Users\Onana Vicky\Documents\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVTaxSales.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\bin\Debug\Cindy Restaurant.exe.config
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\bin\Debug\Cindy Restaurant.exe
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\bin\Debug\Cindy Restaurant.pdb
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.csproj.AssemblyReference.cache
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmChangePass.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmUpdateTax.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmUpElectronicCurrency.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.frmUpProducts.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.ufrmCurrency.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Folder_Updates.ufrmEmployee.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmAddElectronicCurrency.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmAddUsers.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmCurrency.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.frmDeveloper.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.frmLogin.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmModification.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmOrder.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.frmParent.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmPopupChange.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmProdType.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmProductReg.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmReceiptPreview.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmRegEmp.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmSettlement.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmSplash.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.frmTheTables.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Forms.orderInfo.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmFreezeItem.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.btnCancel.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmUnFreezeItem.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVCashierReport.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVDetailsSettlement.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVFreezeItems.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewCurrency.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewElectronicCurrency.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewEmployees.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewLogHistory.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewOrderInfo.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewOrderSettlement.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewProducts.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewProductTypes.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewTax.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmViewUsers.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVNetSales.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Form_View.frmVTaxSales.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy_Restaurant.Properties.Resources.resources
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.csproj.GenerateResource.cache
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.csproj.CoreCompileInputs.cache
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.exe
+C:\Users\5555k\Documents\testing_projects_restaurant_csharp\Cindy Restaurant\Cindy Restaurant\obj\Debug\Cindy Restaurant.pdb
