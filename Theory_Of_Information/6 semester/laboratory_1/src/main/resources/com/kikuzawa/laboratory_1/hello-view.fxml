@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="539.0" prefWidth="716.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kikuzawa.laboratory_1.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <AnchorPane prefHeight="546.0" prefWidth="676.0">
+         <children>
+            <Label layoutX="31.0" layoutY="61.0" prefHeight="26.0" prefWidth="84.0" text="Выражение: " />
+            <Label layoutX="59.0" layoutY="111.0" prefHeight="18.0" prefWidth="56.0" text="mod P = " />
+            <TextField fx:id="exBpx" layoutX="124.0" layoutY="61.0" prefHeight="26.0" prefWidth="536.0" />
+            <TextField fx:id="modBox" layoutX="124.0" layoutY="107.0" prefHeight="26.0" prefWidth="115.0" />
+            <TextArea fx:id="logBox" layoutX="254.0" layoutY="133.0" prefHeight="355.0" prefWidth="398.0" />
+            <Label layoutX="93.0" layoutY="366.0" text="Результат" />
+            <TextField fx:id="resultBox" layoutX="44.0" layoutY="398.0" />
+            <Button fx:id="runButton" layoutX="85.0" layoutY="173.0" mnemonicParsing="false" text="Выполнить" />
+            <Label layoutX="438.0" layoutY="111.0" text="Логи" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
