@@ -23,9 +23,12 @@
 - Операционные системы (CMD, powershell, bash - 3 курс) -> `Operation_Systems`
 - Компьютерные сети (CISCO Packet tracker - 3 курс) -> `Computer_Networks`
 - Вычислительные методы в алгебре и теории чисел (Mathcad - 3 курс) -> `Algebra_(Mathcad)`
-- Теория информации (C# (Windows Forms) - 3 курс) -> `Theory_Of_Information`
+- Теория информации (C# (Windows Forms) & Java - 3 курс) -> `Theory_Of_Information`
 - Машинное обучение (искусственный интеллект) - Курс повышения квалификации от ДГТУ (3 курс) -> `Machine_Leaning_(AI)`
 - История России (просто презентации с темами) -> `History`
+- Системы управления базами данных (MS Access & Postgres SQL - 3 курс) -> `database_management_system`
+- Методы программирования (Python, Java - 3 курс) -> `Methods_Programming`
+
 
 
 # Ошибки и проблемы
