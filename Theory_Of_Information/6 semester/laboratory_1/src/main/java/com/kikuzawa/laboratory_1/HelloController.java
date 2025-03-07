@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+
 import java.util.*;
 
 /**
@@ -29,6 +31,22 @@ public class HelloController {
      */
     @FXML
     public void initialize() {
+        // Добавляем фильтр для поля exBpx
+        exBpx.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().contains("^")) {
+                return null; // Отклоняем изменение, если введен символ ^
+            }
+            return change;
+        }));
+
+        // Добавляем фильтр для поля modBox
+        modBox.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().contains("^")) {
+                return null; // Отклоняем изменение, если введен символ ^
+            }
+            return change;
+        }));
+
         // Добавляем обработчик события для кнопки "Выполнить"
         runButton.setOnAction(event -> {
             try {
@@ -38,6 +56,12 @@ public class HelloController {
                 // Получаем выражение и модуль из текстовых полей
                 String expression = exBpx.getText().trim();
                 int mod = Integer.parseInt(modBox.getText().trim());
+
+                // Проверяем, является ли модуль простым числом
+                if (!isPrime(mod)) {
+                    logBox.appendText("Ошибка: Модуль должен быть простым числом.\n\n");
+                    return; // Прерываем выполнение, если модуль не простой
+                }
 
                 // Логируем входные данные для отладки
                 logBox.appendText("Введенное выражение: " + expression + "\n");
@@ -54,6 +78,8 @@ public class HelloController {
                 logBox.appendText("Итоговый результат: " + result + "\n\n");
             } catch (NumberFormatException e) {
                 logBox.appendText("Ошибка: Некорректный ввод модуля.\n\n");
+            } catch (ArithmeticException e) {
+                logBox.appendText("Ошибка: " + e.getMessage() + "\n\n");
             } catch (Exception e) {
                 logBox.appendText("Ошибка: " + e.getMessage() + "\n\n");
             }
@@ -136,6 +162,11 @@ public class HelloController {
      * @return     обратный элемент или 0 если он не существует
      */
     public int inverse(int a, int mod) {
+        if (mod == 0) {
+            logBox.appendText("Ошибка: Модуль не может быть равен 0.\n");
+            throw new ArithmeticException("Модуль не может быть равен 0.");
+        }
+
         logBox.appendText("\n====== НАЧАЛО ВЫЧИСЛЕНИЯ ОБРАТНОГО ЭЛЕМЕНТА ======\n");
         logBox.appendText("Ищем x такой, что (" + a + " * x) ≡ 1 mod " + mod + "\n");
 
@@ -216,6 +247,11 @@ public class HelloController {
                 result = (a * b) % mod;
                 break;
             case '/':
+                if (b == 0) {
+                    logBox.setText("Ошибка: Деление на ноль невозможно.\n");
+                    resultBox.setText("Ошибка");
+                    throw new ArithmeticException("Деление на ноль невозможно.");
+                }
                 int inv = inverse(b, mod);
                 result = (a * inv) % mod;
                 break;
@@ -223,4 +259,30 @@ public class HelloController {
         logBox.appendText("Применена операция: " + a + " " + op + " " + b + " = " + result + " (mod " + mod + ")\n");
         return result;
     }
+
+    /**
+     * Проверяет, является ли число простым.
+     *
+     * @param n число для проверки
+     * @return true, если число простое, иначе false
+     */
+    private boolean isPrime(int n) {
+        if (n <= 1) {
+            return false;
+        }
+        if (n <= 3) {
+            return true;
+        }
+        if (n % 2 == 0 || n % 3 == 0) {
+            return false;
+        }
+        for (int i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }
