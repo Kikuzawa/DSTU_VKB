@@ -6,11 +6,12 @@ import java.util.Arrays;
 
 @Slf4j
 public class Deque<T> {
+
+    private int rear;
+    private int nItems;
     private final int maxSize;
     private final T[] dequeArray;
     private int front;
-    private int rear;
-    private int nItems;
 
     @SuppressWarnings("unchecked")
     public Deque(int s) {
@@ -21,9 +22,6 @@ public class Deque<T> {
         nItems = 0;
     }
 
-    /**
-     * Вставка элемента в конец дека. Если дек полон, будет перезаписан старый элемент.
-     */
     public void insertRight(T value) {
         if (isFull()) {
             // Если дек полон, передвигаем front для перезаписи элемента
@@ -46,9 +44,6 @@ public class Deque<T> {
         }
     }
 
-    /**
-     * Вставка элемента в начало дека. Если дек полон, будет перезаписан старый элемент.
-     */
     public void insertLeft(T value) {
         if (isFull()) {
             // Если дек полон, передвигаем rear для перезаписи элемента
@@ -70,9 +65,7 @@ public class Deque<T> {
         }
     }
 
-    /**
-     * Удаляет элемент из конца дека.
-     */
+
     public T removeRight() {
         if (isEmpty()) {
             throw new IllegalStateException("Дек пуст");
@@ -92,9 +85,6 @@ public class Deque<T> {
         return temp;
     }
 
-    /**
-     * Удаляет элемент из начала дека.
-     */
     public T removeLeft() {
         if (isEmpty()) {
             throw new IllegalStateException("дек пуст");
@@ -111,23 +101,17 @@ public class Deque<T> {
         return temp;
     }
 
-    /**
-     * Проверяет, пуст ли дек.
-     */
+
     public boolean isEmpty() {
         return nItems == 0;
     }
 
-    /**
-     * Проверяет, заполнен ли дек.
-     */
+
     public boolean isFull() {
         return nItems == maxSize;
     }
 
-    /**
-     * Возвращает строковое представление содержимого дека.
-     */
+
     @Override
     public String toString() {
         if (isEmpty()) {

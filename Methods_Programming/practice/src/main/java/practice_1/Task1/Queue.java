@@ -22,10 +22,6 @@ public class Queue<T> {
         nItems = 0;
     }
 
-    /**
-     * Вставка элемента в конец очереди.
-     * @param j значение, которое мы хотим вставить.
-     */
     public void insert(T j) {
         if (isFull()) {
             front = (front + 1) % maxSize; // Смещаем front вперёд при переполнении
@@ -43,10 +39,6 @@ public class Queue<T> {
         }
     }
 
-    /**
-     * Извлечение элемента в начале очереди.
-     * @return возвращает первый элемент очереди.
-     */
     public T remove() {
         T temp = queArray[front]; // Выборка элемента
 
@@ -60,11 +52,6 @@ public class Queue<T> {
         return temp;
     }
 
-    /**
-     * Удаление n элементов из начала очереди.
-     * @param n количество элементов в очереди, которое мы хотим удалить.
-     * @return возвращает массив элементов, которые мы хотим удалить.
-     */
     @SuppressWarnings("unchecked")
     public T[] remove_n(int n) {
         int actualRemove = Math.min(n, nItems); // Удаляем меньшее из n или текущего количества элементов
@@ -83,39 +70,24 @@ public class Queue<T> {
         return removedElements;
     }
 
-    /**
-     * Чтение элемента в начале очереди.
-     * @return возвращает первый элемент из очереди.
-     */
     public T peekFront() {
         return queArray[front];
     }
 
-    //--------------------------------------------------------------
     public boolean isEmpty() {
         return (nItems == 0);
     }
 
-    /**
-     * Метод для проверки, полная ли очередь.
-     * @return возвращает true, если очередь заполнена, в ином случае false.
-     */
+
     public boolean isFull() {
         return (nItems == maxSize);
     }
 
-    /**
-     * Метод геттер для получения количества элементов в очереди.
-     * @return возвращает целое число - количество
-     */
+
     public int size() {
         return nItems;
     }
 
-    /**
-     * Метод для вывода количества элементов в очереди, учитывая циклическое поведение.
-     * Очередь — циклическая (при достижении конца массива индекс переходит в начало).
-     */
     @Override
     public String toString() {
         if (isEmpty()) { // Проверяем, пуста ли очередь
