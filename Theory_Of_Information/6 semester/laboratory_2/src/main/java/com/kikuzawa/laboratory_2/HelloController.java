@@ -11,11 +11,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 
 public class HelloController {
     public Button count_sum_button;
@@ -61,13 +58,19 @@ public class HelloController {
             // Определение типа входных данных
             String binary;
             if (inputData.matches("[01]+")) {
-                binary = inputData;
+                binary = inputData + "0";
             } else {
                 binary = textToBinary(inputData);
             }
 
             originalBinary = binary;
             String encoded = convolutionalEncode(binary, polynomials);
+
+            // Удаление первых трех символов, если строка состоит только из '0' и '1'
+            if (encoded.matches("[01]+")) {
+                encoded = encoded.substring(3);
+            }
+
             encode_text.setText(encoded);
 
         } catch (Exception e) {
@@ -78,7 +81,7 @@ public class HelloController {
     public void decode() {
         try {
             // Получение закодированных данных
-            String encoded = encode_text.getText().trim();
+            String encoded = "000" + encode_text.getText().trim();
 
             // Декодирование
             String decodedBits = viterbiDecode(encoded, polynomials);
@@ -87,7 +90,7 @@ public class HelloController {
             try {
                 String decoded = binaryToText(decodedBits);
                 String originalText = binaryToText(originalBinary);
-                String output = "Результат:\nТекст: " + decoded + "\nБиты: " + decodedBits;
+                String output = "Результат:\nТекст: " + decoded + "\nБиты: " + decodedBits.substring(0, decodedBits.length() - 1);;
                 if (!decoded.equals(originalText)) {
                     output += "\n\nОбнаружены неисправленные ошибки!";
                 }
@@ -246,8 +249,8 @@ public class HelloController {
                 .orElse(0);
 
         int nStates = (int) Math.pow(2, maxRegister);
-        java.util.Map<String, Double> pathMetrics = new java.util.HashMap<>();
-        java.util.Map<String, List<String>> paths = new java.util.HashMap<>();
+        Map<String, Double> pathMetrics = new HashMap<>();
+        Map<String, List<String>> paths = new HashMap<>();
 
         pathMetrics.put("0".repeat(maxRegister), 0.0);
         paths.put("0".repeat(maxRegister), new ArrayList<>());
@@ -269,8 +272,8 @@ public class HelloController {
 
         for (int step = 0; step < encodedBits.length() / nOutputs; step++) {
             String currentBits = encodedBits.substring(step * nOutputs, (step + 1) * nOutputs);
-            java.util.Map<String, Double> newMetrics = new java.util.HashMap<>();
-            java.util.Map<String, List<String>> newPaths = new java.util.HashMap<>();
+            Map<String, Double> newMetrics = new HashMap<>();
+            Map<String, List<String>> newPaths = new HashMap<>();
 
             for (String state : pathMetrics.keySet()) {
                 if (pathMetrics.get(state) == Double.POSITIVE_INFINITY) {
@@ -368,8 +371,8 @@ public class HelloController {
 
         // Добавляем выбранный путь в историю
         String finalState = pathMetrics.entrySet().stream()
-                .min(java.util.Map.Entry.comparingByValue())
-                .map(java.util.Map.Entry::getKey)
+                .min(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
                 .orElse("");
 
         List<String> resultPath = paths.get(finalState);
