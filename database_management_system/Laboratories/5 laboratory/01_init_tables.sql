@@ -12,7 +12,7 @@ CREATE TABLE books (
     title VARCHAR(255),
     author VARCHAR(255),
     isbn VARCHAR(20),
-    publication_date DATE,
+    publication_date VARCHAR(50),
     status VARCHAR(50)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE readers (
     name VARCHAR(100),
     patronymic VARCHAR(100),
     contact_info TEXT,
-    registration_date DATE
+    registration_date VARCHAR(100)
 );
 
 CREATE TABLE libraries (
@@ -48,8 +48,8 @@ CREATE TABLE book_issue (
     employee_id INT,
     library_id INT,
     book_id INT,
-    issue_date DATE,
-    return_date DATE,
+    issue_date VARCHAR(100),
+    return_date VARCHAR(100),
     status VARCHAR(50),
     FOREIGN KEY (reader_id) REFERENCES readers(reader_id),
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
