@@ -1,163 +1,239 @@
 package org.example.laboratory__3.coding;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Класс для реализации сверточного кодирования
- */
 public class ConvolutionalCoder {
-    private List<String> polynomials;
-    private int constraintLength;
-    private int[] registers;
-
-    public ConvolutionalCoder(List<String> polynomials, int constraintLength) {
+    private List<int[]> polynomials;
+    private boolean verbose;
+    
+    public ConvolutionalCoder() {
+        this.polynomials = new ArrayList<>();
+        this.verbose = false;
+    }
+    
+    /**
+     * Set polynomials for convolutional coding
+     */
+    public void setPolynomials(List<int[]> polynomials) {
         this.polynomials = polynomials;
-        this.constraintLength = constraintLength;
-        this.registers = new int[constraintLength - 1];
     }
-
+    
     /**
-     * Сверточное кодирование
+     * Set verbose mode for debugging
      */
-    public String encode(String data) {
-        if (data == null || data.isEmpty()) {
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+    
+    /**
+     * Convolutional encoding
+     */
+    public String convolutionalEncode(String inputBits) {
+        if (this.polynomials.isEmpty()) {
             return null;
         }
-
-        // Инициализация регистров
-        Arrays.fill(registers, 0);
-
-        StringBuilder result = new StringBuilder();
-        for (char bit : data.toCharArray()) {
-            // Сдвиг регистров и добавление нового бита
-            System.arraycopy(registers, 0, registers, 1, registers.length - 1);
-            registers[0] = bit - '0';
-
-            // Вычисление выходных битов для каждого полинома
-            for (String polynomial : polynomials) {
-                int output = 0;
-                for (int i = 0; i < polynomial.length(); i++) {
-                    if (polynomial.charAt(i) == '1' && i < registers.length + 1) {
-                        output ^= (i == 0) ? (bit - '0') : registers[i - 1];
-                    }
+        
+        if (inputBits.isEmpty()) {
+            return "";
+        }
+        
+        // Find maximum register size
+        int maxRegister = 0;
+        for (int[] poly : this.polynomials) {
+            for (int idx : poly) {
+                if (idx > maxRegister) {
+                    maxRegister = idx;
                 }
-                result.append(output);
             }
         }
-
-        // Добавление нулей для завершения кодирования
-        for (int i = 0; i < constraintLength - 1; i++) {
+        
+        // Initialize registers
+        int[] registers = new int[maxRegister + 1];
+        
+        // Encoding
+        StringBuilder encoded = new StringBuilder();
+        for (int i = 0; i < inputBits.length(); i++) {
+            // Shift registers and insert new bit
             System.arraycopy(registers, 0, registers, 1, registers.length - 1);
-            registers[0] = 0;
-
-            for (String polynomial : polynomials) {
-                int output = 0;
-                for (int j = 0; j < polynomial.length(); j++) {
-                    if (polynomial.charAt(j) == '1' && j < registers.length + 1) {
-                        output ^= (j == 0) ? 0 : registers[j - 1];
-                    }
+            registers[0] = Character.getNumericValue(inputBits.charAt(i));
+            
+            // Calculate output bits
+            for (int[] poly : this.polynomials) {
+                int xor = 0;
+                for (int idx : poly) {
+                    xor ^= registers[idx];
                 }
-                result.append(output);
+                encoded.append(xor);
             }
         }
-
-        return result.toString();
+        
+        return encoded.toString();
     }
-
+    
     /**
-     * Декодирование методом Витерби
+     * Viterbi algorithm for decoding
      */
-    public String decode(String encodedData) {
-        if (encodedData == null || encodedData.isEmpty()) {
+    public String viterbiDecode(String encodedBits) {
+        if (this.polynomials.isEmpty()) {
             return null;
         }
-
-        int numOutputs = polynomials.size();
-        int numStates = 1 << (constraintLength - 1);
-        int[] pathMetrics = new int[numStates];
-        int[] pathHistory = new int[encodedData.length() / numOutputs];
-        Arrays.fill(pathMetrics, Integer.MAX_VALUE);
-        pathMetrics[0] = 0;
-
-        // Декодирование
-        for (int i = 0; i < encodedData.length(); i += numOutputs) {
-            String receivedBits = encodedData.substring(i, Math.min(i + numOutputs, encodedData.length()));
-            int[] newPathMetrics = new int[numStates];
-            Arrays.fill(newPathMetrics, Integer.MAX_VALUE);
-
-            for (int state = 0; state < numStates; state++) {
-                for (int input = 0; input < 2; input++) {
-                    int nextState = ((state << 1) | input) & (numStates - 1);
-                    String outputBits = getOutputBits(state, input);
-                    int hammingDistance = getHammingDistance(outputBits, receivedBits);
-                    int newMetric = pathMetrics[state] + hammingDistance;
-
-                    if (newMetric < newPathMetrics[nextState]) {
-                        newPathMetrics[nextState] = newMetric;
-                        pathHistory[i / numOutputs] = state;
+        
+        if (encodedBits.isEmpty()) {
+            return "";
+        }
+        
+        final int nOutputs = this.polynomials.size();
+        
+        // Find maximum register size
+        int maxRegister = 0;
+        for (int[] poly : this.polynomials) {
+            for (int idx : poly) {
+                if (idx > maxRegister) {
+                    maxRegister = idx;
+                }
+            }
+        }
+        
+        final int nStates = (int) Math.pow(2, maxRegister);
+        final List<String> states = new ArrayList<>();
+        for (int i = 0; i < nStates; i++) {
+            states.add(String.format("%" + maxRegister + "s", Integer.toBinaryString(i)).replace(' ', '0'));
+        }
+        
+        if (this.verbose) {
+            System.out.println("\n" + "═".repeat(50));
+            System.out.println("Starting decoding. Parameters:");
+            System.out.println("Number of states: " + nStates);
+            System.out.println("Encoded sequence length: " + encodedBits.length() + " bits");
+            System.out.println("Number of steps: " + encodedBits.length() / nOutputs);
+        }
+        
+        // Initialize path metrics
+        Map<String, Double> pathMetrics = new HashMap<>();
+        for (String state : states) {
+            pathMetrics.put(state, Double.POSITIVE_INFINITY);
+        }
+        pathMetrics.put("0".repeat(maxRegister), 0.0);
+        
+        Map<String, List<String>> paths = new HashMap<>();
+        for (String state : states) {
+            paths.put(state, new ArrayList<>());
+        }
+        
+        // Process each step
+        for (int step = 0; step < encodedBits.length() / nOutputs; step++) {
+            final String currentBits = encodedBits.substring(step * nOutputs, (step + 1) * nOutputs);
+            
+            final Map<String, Double> newMetrics = new HashMap<>();
+            final Map<String, List<String>> newPaths = new HashMap<>();
+            
+            for (String state : states) {
+                newMetrics.put(state, Double.POSITIVE_INFINITY);
+                newPaths.put(state, new ArrayList<>());
+            }
+            
+            if (this.verbose) {
+                System.out.println("\n" + "─".repeat(50));
+                System.out.println("Step " + (step + 1) + ". Received bits: " + currentBits);
+            }
+            
+            for (String state : states) {
+                if (pathMetrics.get(state) == Double.POSITIVE_INFINITY) {
+                    continue;
+                }
+                
+                if (this.verbose) {
+                    System.out.println("\nState: " + state + " (metric: " + pathMetrics.get(state) + ")");
+                }
+                
+                for (char inputBit : new char[]{'0', '1'}) {
+                    // Calculate next state
+                    String nextState = inputBit + state.substring(0, state.length() - 1);
+                    
+                    // Create temporary registers for output calculation
+                    int[] tmpRegisters = new int[maxRegister + 1];
+                    tmpRegisters[0] = Character.getNumericValue(inputBit);
+                    for (int i = 0; i < state.length(); i++) {
+                        tmpRegisters[i + 1] = Character.getNumericValue(state.charAt(i));
+                    }
+                    
+                    // Calculate expected output bits
+                    StringBuilder expected = new StringBuilder();
+                    for (int[] poly : this.polynomials) {
+                        int xor = 0;
+                        for (int idx : poly) {
+                            xor ^= tmpRegisters[idx];
+                        }
+                        expected.append(xor);
+                    }
+                    final String expectedStr = expected.toString();
+                    
+                    // Calculate Hamming metric
+                    int metric = 0;
+                    for (int i = 0; i < currentBits.length(); i++) {
+                        if (currentBits.charAt(i) != expectedStr.charAt(i)) {
+                            metric++;
+                        }
+                    }
+                    
+                    final double totalMetric = pathMetrics.get(state) + metric;
+                    
+                    if (this.verbose) {
+                        System.out.println("  Input: " + inputBit + " -> State: " + nextState);
+                        System.out.println("  Expected: " + expectedStr + " vs Actual: " + currentBits);
+                        System.out.println("  Step metric: " + metric + ", Total metric: " + totalMetric);
+                    }
+                    
+                    if (totalMetric < newMetrics.get(nextState)) {
+                        newMetrics.put(nextState, totalMetric);
+                        List<String> newPath = new ArrayList<>(paths.get(state));
+                        newPath.add(String.valueOf(inputBit));
+                        newPaths.put(nextState, newPath);
+                        
+                        if (this.verbose) {
+                            System.out.println("  ✔ Metric updated");
+                        }
+                    } else if (this.verbose) {
+                        System.out.println("  ✖ Metric worse than current");
                     }
                 }
             }
-
-            System.arraycopy(newPathMetrics, 0, pathMetrics, 0, numStates);
+            
+            pathMetrics = newMetrics;
+            paths = newPaths;
         }
-
-        // Восстановление исходного сообщения
+        
+        if (this.verbose) {
+            System.out.println("\n" + "═".repeat(50));
+            System.out.println("Final state metrics:");
+            Map<String, List<String>> finalPaths = paths;
+            pathMetrics.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEach(entry -> System.out.println(entry.getKey() + ": " + entry.getValue() + " → " + finalPaths.get(entry.getKey())));
+        }
+        
+        // Find state with minimum metric
+        String finalState = pathMetrics.entrySet().stream()
+                .min(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("0".repeat(maxRegister));
+        
+        List<String> finalPath = paths.get(finalState);
         StringBuilder result = new StringBuilder();
-        int state = pathHistory[pathHistory.length - 1];
-        for (int i = pathHistory.length - 1; i > 0; i--) {
-            result.insert(0, state & 1);
-            state = pathHistory[i - 1];
+        for (String bit : finalPath) {
+            result.append(bit);
         }
-
-        return result.toString();
-    }
-
-    /**
-     * Получение выходных битов для заданного состояния и входного бита
-     */
-    private String getOutputBits(int state, int input) {
-        StringBuilder output = new StringBuilder();
-        int[] registers = new int[constraintLength];
-        registers[0] = input;
-        for (int i = 1; i < constraintLength; i++) {
-            registers[i] = (state >> (i - 1)) & 1;
+        
+        if (this.verbose) {
+            System.out.println("\n" + "═".repeat(50));
+            System.out.println("Selected path: " + finalPath);
+            System.out.println("Final metric: " + pathMetrics.get(finalState));
+            System.out.println("Decoding result: " + result);
         }
-
-        for (String polynomial : polynomials) {
-            int outputBit = 0;
-            for (int i = 0; i < polynomial.length(); i++) {
-                if (polynomial.charAt(i) == '1' && i < registers.length) {
-                    outputBit ^= registers[i];
-                }
-            }
-            output.append(outputBit);
-        }
-
-        return output.toString();
-    }
-
-    /**
-     * Вычисление расстояния Хэмминга между двумя строками
-     */
-    private int getHammingDistance(String s1, String s2) {
-        int distance = 0;
-        int minLength = Math.min(s1.length(), s2.length());
-        for (int i = 0; i < minLength; i++) {
-            if (s1.charAt(i) != s2.charAt(i)) {
-                distance++;
-            }
-        }
-        return distance + Math.abs(s1.length() - s2.length());
-    }
-
-    // Геттеры для доступа к параметрам кодирования
-    public List<String> getPolynomials() {
-        return polynomials;
-    }
-
-    public int getConstraintLength() {
-        return constraintLength;
+        
+        return result.substring(0, encodedBits.length() / this.polynomials.size());
     }
 } 

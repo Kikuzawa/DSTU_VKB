@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class HelloApplication extends Application {
     @Override
@@ -16,12 +15,6 @@ public class HelloApplication extends Application {
         stage.setTitle("Cascade Coding Application");
         stage.setScene(scene);
         stage.show();
-
-        stage.setOnCloseRequest(this::handleCloseRequest);
-    }
-
-    private void handleCloseRequest(WindowEvent event) {
-        // Handle close request
     }
 
     public static void main(String[] args) {

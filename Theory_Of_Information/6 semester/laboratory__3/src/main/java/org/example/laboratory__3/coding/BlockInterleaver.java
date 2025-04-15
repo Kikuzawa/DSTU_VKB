@@ -3,9 +3,6 @@ package org.example.laboratory__3.coding;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Класс для реализации блочного перемежения
- */
 public class BlockInterleaver {
     private int rows;
     private int cols;
@@ -28,115 +25,80 @@ public class BlockInterleaver {
     }
     
     /**
-     * Перемежение данных
+     * Interleave binary data
      */
-    public String interleave(String data) {
-        if (data == null || data.isEmpty()) {
-            return null;
+    public String interleave(String binaryData) {
+        // Check that data length doesn't exceed interleaver size
+        if (binaryData.length() > this.rows * this.cols) {
+            throw new IllegalArgumentException("Data length (" + binaryData.length() + 
+                   ") exceeds interleaver size (" + this.rows * this.cols + ")");
         }
-
-        // Дополнение нулями до кратной длины блока
-        int blockSize = rows * cols;
-        if (data.length() % blockSize != 0) {
-            data = data + "0".repeat(blockSize - (data.length() % blockSize));
+        
+        // Pad data with zeros if needed
+        String paddedData = binaryData;
+        int paddingNeeded = this.rows * this.cols - binaryData.length();
+        if (paddingNeeded > 0) {
+            paddedData = binaryData + "0".repeat(paddingNeeded);
         }
-
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < data.length(); i += blockSize) {
-            String block = data.substring(i, Math.min(i + blockSize, data.length()));
-            result.append(interleaveBlock(block));
-        }
-
-        return result.toString();
-    }
-    
-    /**
-     * Обратное перемежение данных
-     */
-    public String deinterleave(String data) {
-        if (data == null || data.isEmpty()) {
-            return null;
-        }
-
-        // Дополнение нулями до кратной длины блока
-        int blockSize = rows * cols;
-        if (data.length() % blockSize != 0) {
-            data = data + "0".repeat(blockSize - (data.length() % blockSize));
-        }
-
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < data.length(); i += blockSize) {
-            String block = data.substring(i, Math.min(i + blockSize, data.length()));
-            result.append(deinterleaveBlock(block));
-        }
-
-        return result.toString();
-    }
-    
-    /**
-     * Перемежение одного блока данных
-     */
-    private String interleaveBlock(String block) {
-        if (block.length() != rows * cols) {
-            return null;
-        }
-
-        // Создание матрицы
-        List<List<Character>> matrix = new ArrayList<>();
-        for (int i = 0; i < rows; i++) {
-            List<Character> row = new ArrayList<>();
-            for (int j = 0; j < cols; j++) {
-                row.add(block.charAt(i * cols + j));
-            }
+        
+        // Fill interleaver matrix by rows
+        List<String> matrix = new ArrayList<>();
+        for (int i = 0; i < this.rows; i++) {
+            String row = paddedData.substring(i * this.cols, (i + 1) * this.cols);
             matrix.add(row);
         }
-
-        // Чтение по столбцам
-        StringBuilder result = new StringBuilder();
-        for (int j = 0; j < cols; j++) {
-            for (int i = 0; i < rows; i++) {
-                result.append(matrix.get(i).get(j));
+        
+        // Read by columns
+        StringBuilder interleavedData = new StringBuilder();
+        for (int j = 0; j < this.cols; j++) {
+            for (int i = 0; i < this.rows; i++) {
+                if (j < matrix.get(i).length()) {
+                    interleavedData.append(matrix.get(i).charAt(j));
+                }
             }
         }
-
-        return result.toString();
+        
+        return interleavedData.toString();
     }
     
     /**
-     * Обратное перемежение одного блока данных
+     * Deinterleave binary data
      */
-    private String deinterleaveBlock(String block) {
-        if (block.length() != rows * cols) {
-            return null;
+    public String deinterleave(String interleavedData) {
+        // Check that data length matches interleaver size
+        int expectedLength = this.rows * this.cols;
+        if (interleavedData.length() != expectedLength) {
+            throw new IllegalArgumentException("Data length (" + interleavedData.length() + 
+                   ") doesn't match interleaver size (" + expectedLength + ")");
         }
-
-        // Создание матрицы
-        List<List<Character>> matrix = new ArrayList<>();
-        for (int i = 0; i < rows; i++) {
-            List<Character> row = new ArrayList<>();
-            for (int j = 0; j < cols; j++) {
-                row.add('0');
-            }
-            matrix.add(row);
-        }
-
-        // Заполнение матрицы по столбцам
-        int index = 0;
-        for (int j = 0; j < cols; j++) {
-            for (int i = 0; i < rows; i++) {
-                matrix.get(i).set(j, block.charAt(index++));
+        
+        // Fill interleaver matrix by columns
+        char[][] matrix = new char[this.rows][this.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                matrix[i][j] = '0';
             }
         }
-
-        // Чтение по строкам
-        StringBuilder result = new StringBuilder();
-        for (List<Character> row : matrix) {
-            for (char c : row) {
-                result.append(c);
+        
+        int idx = 0;
+        for (int j = 0; j < this.cols; j++) {
+            for (int i = 0; i < this.rows; i++) {
+                if (idx < interleavedData.length()) {
+                    matrix[i][j] = interleavedData.charAt(idx);
+                    idx++;
+                }
             }
         }
-
-        return result.toString();
+        
+        // Read by rows
+        StringBuilder deinterleavedData = new StringBuilder();
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                deinterleavedData.append(matrix[i][j]);
+            }
+        }
+        
+        return deinterleavedData.toString();
     }
     
     /**

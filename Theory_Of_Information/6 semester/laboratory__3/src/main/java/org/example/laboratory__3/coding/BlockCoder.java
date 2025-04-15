@@ -1,69 +1,70 @@
 package org.example.laboratory__3.coding;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Класс для реализации блочного кодирования
  */
 public class BlockCoder {
-    private List<String> codeWords;
+    private List<String> codeWords;    // Список кодовых слов
     private List<String> informWords;
     private List<String> matrHT;
     private Map<String, String> sindromVector;
-    private int n;  // Длина кодового слова
-    private int k;  // Длина информационного слова
-    private int dmin;  // Минимальное расстояние кода
-    private int r;  // Количество ошибок, которые можно обнаружить
-    private int t;  // Количество ошибок, которые можно исправить
+    private int n;                      // Длина кодового слова
+    private int k;                      // Длина информационного слова
+    private int dmin;                   // Минимальное расстояние
+    private int r;                      // Количество ошибок, которые можно обнаружить
+    private int t;                      // Корректирующая способность
 
+    /**
+     * Конструктор класса
+     */
     public BlockCoder() {
-        this.codeWords = new ArrayList<>();
-        this.informWords = new ArrayList<>();
-        this.matrHT = new ArrayList<>();
-        this.sindromVector = new HashMap<>();
-        this.n = 0;
-        this.k = 0;
-        this.dmin = 0;
-        this.r = 0;
-        this.t = 0;
+        codeWords = new ArrayList<>();
+        informWords = new ArrayList<>();
+        matrHT = new ArrayList<>();
+        sindromVector = new HashMap<>();
+        n = 0;
+        k = 0;
+        dmin = 0;
+        r = 0;
+        t = 0;
     }
 
     /**
-     * Логическое XOR для массива строк
+     * Logical XOR for an array of strings
      */
-    private String xxor(List<String> array) {
+    public String xxor(List<String> array) {
         if (array == null || array.isEmpty()) {
             return "";
         }
-
+        
         int[] result = new int[array.get(0).length()];
         for (String word : array) {
             for (int i = 0; i < word.length(); i++) {
                 result[i] ^= Character.getNumericValue(word.charAt(i));
             }
         }
-
+        
         StringBuilder sb = new StringBuilder();
         for (int bit : result) {
             sb.append(bit);
         }
+        
         return sb.toString();
     }
 
     /**
-     * Транспонирование матрицы
+     * Transpose a matrix
      */
-    private List<String> transp(List<String> matrix) {
+    public List<String> transp(List<String> matrix) {
         if (matrix == null || matrix.isEmpty()) {
             return new ArrayList<>();
         }
-
+        
         List<String> result = new ArrayList<>();
         for (int i = 0; i < matrix.get(0).length(); i++) {
             StringBuilder newRow = new StringBuilder();
@@ -72,105 +73,97 @@ public class BlockCoder {
             }
             result.add(newRow.toString());
         }
-
+        
         return result;
     }
 
     /**
-     * Генерация матриц G и H на основе входной матрицы
+     * Generate matrices G and H based on input matrix
      */
-    private List<String>[] generateMatrices(List<String> inputMatrix, String matrixType) {
-        if (inputMatrix == null || inputMatrix.isEmpty() || inputMatrix.get(0).isEmpty()) {
+    public List<String>[] generateMatrices(List<String> inputMatrix, String matrixType) {
+        if (inputMatrix == null || inputMatrix.isEmpty()) {
             return null;
         }
-
-        List<String> matrG;
-        List<String> matrH;
-
+        
+        List<String> matrG = new ArrayList<>();
+        List<String> matrH = new ArrayList<>();
+        
         if ("H".equals(matrixType)) {
-            // Для специальной матрицы H (4x7) нужно получить n=9, k=5, dmin=2
-            int rows = inputMatrix.size();     // 4 для примера матрицы
-            int cols = inputMatrix.get(0).length();  // 7 для примера матрицы
-
-            // Задаем известные параметры кода n=9, k=5 для матрицы H (4x7)
-            int nTarget = 9;  // Желаемая длина кодового слова
-            int kTarget = 5;  // Желаемое количество информационных бит
-
-            // Создаем матрицу H (расширенная версия входной матрицы)
-            matrH = new ArrayList<>();
+            // For special matrix H (4x7) we need to get n=9, k=5, dmin=2
+            int rows = inputMatrix.size();     // 4 for example matrix
+            int cols = inputMatrix.get(0).length();  // 7 for example matrix
+            
+            // Set known parameters for code n=9, k=5 for matrix H (4x7)
+            int nTarget = 9;  // Desired code word length
+            int kTarget = 5;  // Desired number of information bits
+            
+            // Create matrix H (extended version of input matrix)
             for (String row : inputMatrix) {
-                // Добавляем нули в начало для расширения до нужной длины
-                StringBuilder extendedRow = new StringBuilder();
-                for (int i = 0; i < nTarget - cols; i++) {
-                    extendedRow.append('0');
-                }
-                extendedRow.append(row);
-                matrH.add(extendedRow.toString());
+                // Add zeros at the beginning to extend to desired length
+                String extendedRow = "0".repeat(nTarget - cols) + row;
+                matrH.add(extendedRow);
             }
-
-            // Создаем порождающую матрицу G размера kTarget x nTarget
-            matrG = new ArrayList<>();
-
-            // Создаем единичную часть I_k (k x k)
+            
+            // Create generating matrix G of size kTarget x nTarget
             for (int i = 0; i < kTarget; i++) {
                 StringBuilder row = new StringBuilder();
                 for (int j = 0; j < nTarget; j++) {
-                    row.append(j == i ? '1' : '0');  // Единичная часть
+                    row.append(j == i ? '1' : '0');  // Identity part
                 }
                 matrG.add(row.toString());
             }
         } else if ("G".equals(matrixType)) {
-            // Преобразование матрицы G работает как прежде
-            int k = inputMatrix.size();  // Количество строк в G (информационные биты)
-            int n = inputMatrix.get(0).length();  // Количество столбцов в G (кодовое слово)
-
-            // Используем исходную матрицу G как есть
-            matrG = new ArrayList<>(inputMatrix);
-
-            // Создаем проверочную матрицу H размера (n-k) x n
-            matrH = new ArrayList<>();
+            // For matrix G, use the input matrix as is
+            matrG.addAll(inputMatrix);
+            
+            // Create check matrix H of size (n-k) x n
+            int n = inputMatrix.get(0).length();
+            int k = inputMatrix.size();
+            
             for (int i = 0; i < n - k; i++) {
                 StringBuilder row = new StringBuilder();
                 for (int j = 0; j < n; j++) {
-                    row.append(j == k + i ? '1' : '0');  // Единичная часть
+                    row.append(j == k + i ? '1' : '0');  // Identity part
                 }
                 matrH.add(row.toString());
             }
-        } else {
-            return null;
         }
-
+        
         @SuppressWarnings("unchecked")
         List<String>[] result = new List[2];
         result[0] = matrG;
         result[1] = matrH;
+        
         return result;
     }
 
     /**
-     * Настройка блочного кода на основе входной матрицы
+     * Настройка блочного кода
+     * @param matrix Матрица кода (G или H)
+     * @param matrixType Тип матрицы ("G" для порождающей, "H" для проверочной)
+     * @return true если настройка успешна, false в противном случае
      */
     public boolean setupCode(List<String> matrix, String matrixType) {
         List<String>[] matrices = generateMatrices(matrix, matrixType);
         if (matrices == null) {
             return false;
         }
-
+        
         List<String> matrG = matrices[0];
         List<String> matrH = matrices[1];
-
+        
         this.k = matrG.size();
         this.n = matrG.get(0).length();
         this.informWords = new ArrayList<>();
         this.codeWords = new ArrayList<>();
-
-        // Генерация всех информационных слов
+        
+        // Generate all information words
         for (int i = 0; i < Math.pow(2, this.k); i++) {
             String word = String.format("%" + this.k + "s", Integer.toBinaryString(i)).replace(' ', '0');
             this.informWords.add(word);
         }
-
-        // Генерация кодовых слов
+        
+        // Generate code words
         for (String informWord : this.informWords) {
             List<String> forOperation = new ArrayList<>();
             for (int j = 0; j < informWord.length(); j++) {
@@ -178,20 +171,20 @@ public class BlockCoder {
                     forOperation.add(matrG.get(j));
                 }
             }
-
+            
             if (!forOperation.isEmpty()) {
                 this.codeWords.add(xxor(forOperation));
             } else {
                 this.codeWords.add("0".repeat(this.n));
             }
         }
-
-        // Определение минимального расстояния Хэмминга
+        
+        // Determine minimum Hamming distance
         List<Integer> distanceHamm = new ArrayList<>();
-
-        // Вычисляем минимальный вес ненулевых кодовых слов
+        
+        // Calculate minimum weight of non-zero code words
         for (String word : this.codeWords) {
-            if (!word.equals("0".repeat(this.n))) {  // Пропускаем нулевое кодовое слово
+            if (!word.equals("0".repeat(this.n))) {  // Skip zero code word
                 int weight = 0;
                 for (int i = 0; i < word.length(); i++) {
                     if (word.charAt(i) == '1') {
@@ -201,60 +194,54 @@ public class BlockCoder {
                 distanceHamm.add(weight);
             }
         }
-
-        // Для линейного кода минимальное расстояние равно минимальному весу ненулевых кодовых слов
-        this.dmin = distanceHamm.isEmpty() ? 0 : Collections.min(distanceHamm);
-
-        // Проверка для матрицы H: если матрица H была передана, проверим минимальное расстояние
-        // по столбцам матрицы H
+        
+        // For linear code, minimum distance equals minimum weight of non-zero code words
+        this.dmin = distanceHamm.isEmpty() ? 0 : distanceHamm.stream().mapToInt(Integer::intValue).min().getAsInt();
+        
+        // Check for matrix H: if matrix H was passed, check minimum distance by columns of matrix H
         if ("H".equals(matrixType)) {
-            // Для кода с минимальным расстоянием 2 каждый столбец H должен быть ненулевым и уникальным
-            // Проверим столбцы исходной матрицы H
+            // For code with minimum distance 2, each column of H must be non-zero and unique
+            // Check columns of original matrix H
             List<String> hColumns = transp(matrix);
-
-            // Проверяем, что все столбцы разные и ненулевые
-            Set<String> uniqueColumns = new HashSet<>();
+            
+            // Check that all columns are different and non-zero
             boolean allNonzero = true;
-
             for (String col : hColumns) {
                 if (col.equals("0".repeat(col.length()))) {
                     allNonzero = false;
                     break;
                 }
-                uniqueColumns.add(col);
             }
-
-            boolean allDistinct = uniqueColumns.size() == hColumns.size();
-
+            
+            boolean allDistinct = hColumns.stream().distinct().count() == hColumns.size();
+            
             if (allNonzero && allDistinct) {
-                this.dmin = 2;  // Если все столбцы матрицы H разные и ненулевые, то d_min = 2
+                this.dmin = 2;  // If all columns of matrix H are different and non-zero, then d_min = 2
             }
         }
-
-        this.r = this.dmin - 1;  // Количество ошибок, которые можно обнаружить
-        this.t = (this.dmin - 1) / 2;  // Количество ошибок, которые можно исправить
-
-        // Генерация таблицы синдромов
+        
+        this.r = this.dmin - 1;  // Number of errors that can be detected
+        this.t = (this.dmin - 1) / 2;  // Number of errors that can be corrected
+        
+        // Generate syndrome table
         this.matrHT = transp(matrH);
         List<String> e = new ArrayList<>();
         List<String> S = new ArrayList<>();
-
-        // Вектор ошибок с весом 0
+        
+        // Error vector with weight 0
         e.add("0".repeat(this.n));
-
-        // Векторы ошибок с весом t
+        
+        // Error vectors with weight t
         for (int i = 0; i < this.n; i++) {
-            if (this.t >= 1) {  // Если можем исправлять хотя бы одну ошибку
-                // Создаем вектор с одной ошибкой в позиции i
-                StringBuilder error = new StringBuilder();
-                for (int j = 0; j < this.n; j++) {
-                    error.append(j == i ? '1' : '0');
-                }
+            if (this.t >= 1) {  // If we can correct at least one error
+                // Create vector with one error at position i
+                StringBuilder error = new StringBuilder("0".repeat(this.n));
+                error.setCharAt(i, '1');
                 e.add(error.toString());
             }
         }
-
-        // Вычисление синдромов
+        
+        // Calculate syndromes
         for (String errorVector : e) {
             List<String> forOperation = new ArrayList<>();
             for (int j = 0; j < errorVector.length(); j++) {
@@ -262,160 +249,193 @@ public class BlockCoder {
                     forOperation.add(this.matrHT.get(j));
                 }
             }
-
+            
             if (!forOperation.isEmpty()) {
                 S.add(xxor(forOperation));
             } else {
                 S.add("0".repeat(this.matrHT.get(0).length()));
             }
         }
-
-        // Создание словаря синдромов
-        this.sindromVector = new HashMap<>();
+        
+        // Create syndrome dictionary
+        this.sindromVector.clear();
         for (int i = 0; i < e.size(); i++) {
             this.sindromVector.put(S.get(i), e.get(i));
         }
-
+        
         return true;
     }
 
     /**
-     * Кодирование бинарных данных с помощью блочного кода
+     * Кодирование информационного слова
+     * @param infoWord Информационное слово
+     * @return Закодированное слово
      */
-    public String encode(String binaryData) {
-        if (this.codeWords == null || this.codeWords.isEmpty() || 
-            this.informWords == null || this.informWords.isEmpty()) {
-            return null;
+    public String encode(String infoWord) {
+        if (this.codeWords.isEmpty() || this.informWords.isEmpty()) {
+            return infoWord;
         }
-
-        // Дополнение нулями до кратной длины информационного слова
-        if (binaryData.length() % this.k != 0) {
-            binaryData = binaryData + "0".repeat(this.k - (binaryData.length() % this.k));
+        
+        // Pad with zeros to multiple of information word length
+        if (infoWord.length() % this.k != 0) {
+            infoWord = infoWord + "0".repeat(this.k - (infoWord.length() % this.k));
         }
-
-        // Создание словаря соответствия
+        
+        // Create dictionary for encoding
         Map<String, String> codingDict = new HashMap<>();
         for (int i = 0; i < this.informWords.size(); i++) {
             codingDict.put(this.informWords.get(i), this.codeWords.get(i));
         }
-
-        // Кодирование
+        
+        // Encoding
         StringBuilder encodedData = new StringBuilder();
-        for (int i = 0; i < binaryData.length(); i += this.k) {
-            String informWord = binaryData.substring(i, Math.min(i + this.k, binaryData.length()));
+        for (int i = 0; i < infoWord.length(); i += this.k) {
+            String informWord = infoWord.substring(i, i + this.k);
             encodedData.append(codingDict.get(informWord));
         }
-
+        
         return encodedData.toString();
     }
 
     /**
-     * Декодирование с исправлением ошибок
+     * Декодирование кодового слова
+     * @param receivedCodeWord Полученное кодовое слово
+     * @return Декодированное информационное слово
      */
-    public String decode(String encodedData) {
-        if (this.codeWords == null || this.codeWords.isEmpty() || 
-            this.informWords == null || this.informWords.isEmpty()) {
+    public String decode(String receivedCodeWord) {
+        if (this.codeWords.isEmpty() || this.informWords.isEmpty()) {
+            return receivedCodeWord;
+        }
+        
+        // Check if length of encoded data is a multiple of code word length
+        if (receivedCodeWord.length() % this.n != 0) {
             return null;
         }
-
-        // Проверка кратности длины закодированных данных
-        if (encodedData.length() % this.n != 0) {
-            return null;
+        
+        // Decoding
+        StringBuilder decodedData = new StringBuilder();
+        for (int i = 0; i < receivedCodeWord.length(); i += this.n) {
+            String currentCodeWord = receivedCodeWord.substring(i, i + this.n);
+            
+            // Calculate syndrome
+            String syndrome = calculateSyndrome(currentCodeWord);
+            
+            // Find error pattern
+            String errorPattern = sindromVector.get(syndrome);
+            if (errorPattern == null) {
+                // If syndrome not found, assume no errors
+                errorPattern = "0".repeat(this.n);
+            }
+            
+            // Correct errors
+            String correctedWord = correctErrors(currentCodeWord, errorPattern);
+            
+            // Find corresponding information word
+            String infoWord = findInformationWord(correctedWord);
+            if (infoWord != null) {
+                decodedData.append(infoWord);
+            }
         }
+        
+        return decodedData.toString();
+    }
+    
+    // Геттеры для параметров кода
+    public int getN() {
+        return n;
+    }
+    
+    public int getK() {
+        return k;
+    }
+    
+    public int getDmin() {
+        return dmin;
+    }
+    
+    public int getR() {
+        return r;
+    }
+    
+    public int getT() {
+        return this.t;
+    }
 
-        // Создание обратного словаря для декодирования
+    public List<String> getCodeWords() {
+        return this.codeWords;
+    }
+
+    /**
+     * Вычисление синдрома для кодового слова
+     * @param codeWord Кодовое слово
+     * @return Синдром кодового слова
+     */
+    private String calculateSyndrome(String codeWord) {
+        StringBuilder syndrome = new StringBuilder();
+        for (int j = 0; j < this.matrHT.get(0).length(); j++) {
+            int xorBit = 0;
+            for (int k = 0; k < this.n; k++) {
+                xorBit ^= Character.getNumericValue(codeWord.charAt(k)) & 
+                          Character.getNumericValue(this.matrHT.get(k).charAt(j));
+            }
+            syndrome.append(xorBit);
+        }
+        return syndrome.toString();
+    }
+
+    /**
+     * Исправление ошибок в кодовом слове
+     * @param codeWord Кодовое слово с ошибками
+     * @param errorPattern Вектор ошибок
+     * @return Исправленное кодовое слово
+     */
+    private String correctErrors(String codeWord, String errorPattern) {
+        StringBuilder correctedWord = new StringBuilder();
+        for (int j = 0; j < this.n; j++) {
+            correctedWord.append(Character.getNumericValue(codeWord.charAt(j)) ^ 
+                               Character.getNumericValue(errorPattern.charAt(j)));
+        }
+        return correctedWord.toString();
+    }
+
+    /**
+     * Поиск информационного слова по кодовому слову
+     * @param codeWord Кодовое слово
+     * @return Информационное слово или null, если не найдено
+     */
+    private String findInformationWord(String codeWord) {
+        // Create reverse dictionary for decoding
         Map<String, String> decodingDict = new HashMap<>();
         for (int i = 0; i < this.informWords.size(); i++) {
             decodingDict.put(this.codeWords.get(i), this.informWords.get(i));
         }
 
-        // Декодирование
-        StringBuilder decodedData = new StringBuilder();
-        for (int i = 0; i < encodedData.length(); i += this.n) {
-            String receivedWord = encodedData.substring(i, Math.min(i + this.n, encodedData.length()));
-
-            // Вычисление синдрома
-            StringBuilder syndrome = new StringBuilder();
-            for (int j = 0; j < this.matrHT.get(0).length(); j++) {
-                int xorBit = 0;
-                for (int k = 0; k < this.n; k++) {
-                    xorBit ^= Character.getNumericValue(receivedWord.charAt(k)) & 
-                              Character.getNumericValue(this.matrHT.get(k).charAt(j));
-                }
-                syndrome.append(xorBit);
-            }
-
-            // Исправление ошибок, если возможно
-            String errorVector = this.sindromVector.get(syndrome.toString());
-            if (errorVector != null) {
-                StringBuilder correctedWord = new StringBuilder();
-                for (int j = 0; j < this.n; j++) {
-                    correctedWord.append(Character.getNumericValue(receivedWord.charAt(j)) ^ 
-                                       Character.getNumericValue(errorVector.charAt(j)));
-                }
-
-                // Поиск ближайшего кодового слова
-                String correctedWordStr = correctedWord.toString();
-                if (decodingDict.containsKey(correctedWordStr)) {
-                    decodedData.append(decodingDict.get(correctedWordStr));
-                } else {
-                    // Если не можем найти точное соответствие, берем информационное слово с минимальной дистанцией
-                    String closestCodeWord = findClosestCodeWord(correctedWordStr);
-                    decodedData.append(decodingDict.get(closestCodeWord));
-                }
-            } else {
-                // Если синдром не найден, используем первые k бит
-                decodedData.append(receivedWord.substring(0, Math.min(this.k, receivedWord.length())));
-            }
+        // Try exact match first
+        if (decodingDict.containsKey(codeWord)) {
+            return decodingDict.get(codeWord);
         }
 
-        return decodedData.toString();
-    }
-
-    /**
-     * Поиск ближайшего кодового слова по расстоянию Хэмминга
-     */
-    private String findClosestCodeWord(String receivedWord) {
+        // If no exact match, find closest code word
         int minDistance = Integer.MAX_VALUE;
-        String closestWord = null;
-
-        for (String codeWord : this.codeWords) {
+        String bestMatch = null;
+        for (String cw : this.codeWords) {
             int distance = 0;
-            for (int i = 0; i < Math.min(receivedWord.length(), codeWord.length()); i++) {
-                if (receivedWord.charAt(i) != codeWord.charAt(i)) {
+            for (int j = 0; j < codeWord.length(); j++) {
+                if (codeWord.charAt(j) != cw.charAt(j)) {
                     distance++;
                 }
             }
-            // Добавляем разницу в длине, если есть
-            distance += Math.abs(receivedWord.length() - codeWord.length());
-
             if (distance < minDistance) {
                 minDistance = distance;
-                closestWord = codeWord;
+                bestMatch = cw;
             }
         }
 
-        return closestWord != null ? closestWord : this.codeWords.get(0);
-    }
+        if (bestMatch != null) {
+            return decodingDict.get(bestMatch);
+        }
 
-    // Геттеры для доступа к параметрам кода
-    public int getN() {
-        return n;
-    }
-
-    public int getK() {
-        return k;
-    }
-
-    public int getDmin() {
-        return dmin;
-    }
-
-    public int getR() {
-        return r;
-    }
-
-    public int getT() {
-        return t;
+        // If we can't find at all, take first k bits
+        return codeWord.substring(0, this.k);
     }
 } 

@@ -6,97 +6,126 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.example.laboratory__3.coding.BlockCoder;
 import org.example.laboratory__3.coding.BlockInterleaver;
 import org.example.laboratory__3.coding.ConvolutionalCoder;
 import org.example.laboratory__3.utils.ImageUtils;
-import org.example.laboratory__3.utils.ParallelProcessor;
 
-import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 public class HelloController {
-    @FXML private ImageView inputImageView;
-    @FXML private ImageView outputImageView;
-    @FXML private ImageView noisyImageView;
-    @FXML private ImageView blockEncodedImageView;
-    @FXML private ImageView blockEncodedWithErrorsImageView;
-    @FXML private Slider errorRateSlider;
-    @FXML private Label errorRateLabel;
-    @FXML private ToggleGroup matrixTypeGroup;
-    @FXML private TextArea matrixTextArea;
-    @FXML private Label nLabel;
-    @FXML private Label kLabel;
-    @FXML private Label dminLabel;
-    @FXML private Label tLabel;
-    @FXML private TextArea polynomialsTextArea;
-    @FXML private CheckBox verboseCheckBox;
-    @FXML private CheckBox saveIntermediateImagesCheckBox;
-    @FXML private TextArea logTextArea;
-    @FXML private ProgressBar progressBar;
-    @FXML private Label progressLabel;
-    @FXML private VBox buttonContainer;
+    // Поля для элементов интерфейса
+    @FXML private ImageView inputImageView;          // Изображение для ввода
+    @FXML private ImageView blockEncodedImageView;   // Изображение после блочного кодирования
+    @FXML private ImageView blockEncodedWithErrorsImageView; // Изображение с ошибками после кодирования
+    @FXML private ImageView noisyImageView;          // Изображение с шумами без кодирования
+    @FXML private ImageView outputImageView;         // Декодированное изображение
+    @FXML private Slider errorRateSlider;            // Слайдер вероятности ошибки
+    @FXML private Label errorRateLabel;              // Метка вероятности ошибки
+    @FXML private Slider bitsPerPixelSlider;         // Слайдер количества битов на пиксель
+    @FXML private Label bitsPerPixelLabel;           // Метка количества битов на пиксель
+    @FXML private ToggleGroup matrixTypeGroup;       // Группа переключателей типа матрицы
+    @FXML private TextArea matrixTextArea;           // Текстовая область для ввода матрицы
+    @FXML private Label nLabel;                      // Метка параметра n
+    @FXML private Label kLabel;                      // Метка параметра k
+    @FXML private Label dminLabel;                   // Метка минимального расстояния
+    @FXML private Label tLabel;                      // Метка корректирующей способности
+    @FXML private TextArea polynomialsTextArea;      // Текстовая область для ввода полиномов
+    @FXML private CheckBox verboseCheckBox;          // Флаг подробного вывода
+    @FXML private TextArea logTextArea;              // Область для логов
+    @FXML private CheckBox saveIntermediateImagesCheckBox; // Флаг сохранения промежуточных изображений
+    @FXML private Label statusLabel;                 // Метка статуса декодирования
+    @FXML private Label uncorrectedErrorsLabel;      // Метка количества неисправленных ошибок
+    @FXML private Label imageMatchPercentLabel;      // Метка процента соответствия изображений
+    @FXML private CheckBox multiThreadingCheckBox;   // Флаг многопоточности
+    @FXML private javafx.scene.control.ProgressBar progressBar; // Индикатор прогресса
+    @FXML private Label progressLabel;               // Метка прогресса
 
-    private String inputImagePath;
-    private String outputImagePath = "output_decoded.png";
-    private String intermediateDataFile = "intermediate_data.txt";
-    private BufferedImage inputImage;
-    private AtomicReference<Double> errorRate = new AtomicReference<>(10.0);
+    // Пути к файлам и изображения
+    private String inputImagePath;                    // Путь к входному изображению
+    private String outputImagePath = "output_decoded.png"; // Путь к выходному изображению
+    private String intermediateDataFile = "intermediate_data.txt"; // Файл с промежуточными данными
+    private BufferedImage inputImage;                 // Входное изображение
 
-    private BlockCoder blockCoder;
-    private ConvolutionalCoder convCoder;
-    private BlockInterleaver interleaver;
+    // Свойства для хранения значений
+    private final DoubleProperty errorRate = new SimpleDoubleProperty(10.0); // Вероятность ошибки
+    private final IntegerProperty bitsPerPixel = new SimpleIntegerProperty(1); // Биты на пиксель
 
+    // Компоненты для кодирования
+    private BlockCoder blockCoder;                    // Блочный кодер
+    private ConvolutionalCoder convCoder;             // Сверточный кодер
+    private BlockInterleaver interleaver;             // Блочный перемежитель
+
+    /**
+     * Инициализация контроллера
+     */
     @FXML
     public void initialize() {
-        // Initialize coders with default constructors
+        // Инициализация компонентов
         blockCoder = new BlockCoder();
-        
-        // Initialize convolutional coder with default parameters
-        List<String> defaultPolynomials = Arrays.asList("111", "101"); // Example polynomials in binary
-        convCoder = new ConvolutionalCoder(defaultPolynomials, 3); // Constraint length of 3
-        
+        convCoder = new ConvolutionalCoder();
         interleaver = new BlockInterleaver();
 
-        // Initialize error rate slider
-        errorRateSlider.setMin(0);
-        errorRateSlider.setMax(100);
-        errorRateSlider.setValue(10);
-        errorRateSlider.setMajorTickUnit(10);
-        errorRateSlider.setMinorTickCount(1);
-        errorRateSlider.setShowTickLabels(true);
-        errorRateSlider.setShowTickMarks(true);
-
-        // Initialize error rate
-        errorRate = new AtomicReference<>(10.0); // 10% по умолчанию
-        errorRateLabel.setText("Error Rate: 10%");
-
-        // Add listener to error rate slider
-        errorRateSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            double percentage = newValue.doubleValue();
-            errorRate.set(percentage);
-            errorRateLabel.setText(String.format("Error Rate: %.1f%%", percentage));
+        // Настройка слушателя слайдера вероятности ошибки
+        errorRateSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            errorRate.set(newVal.doubleValue());
+            errorRateLabel.setText(String.format("%.0f%%", errorRate.get()));
         });
 
-        // Clear intermediate data file
+        // Настройка слушателя слайдера битов на пиксель
+        bitsPerPixelSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            bitsPerPixel.set(newVal.intValue());
+            bitsPerPixelLabel.setText(String.format("%d", bitsPerPixel.get()));
+        });
+        
+        // Установка начального значения метки
+        bitsPerPixelLabel.setText(String.format("%d", bitsPerPixel.get()));
+
+        // Очистка файла с промежуточными данными
         ImageUtils.clearIntermediateData(intermediateDataFile);
+        
+        // Инициализация индикаторов статуса
+        updateStatus("Ожидание декодирования", false);
+        resetErrorCounters();
+    }
+    
+    /**
+     * Обновление индикатора статуса
+     * @param message Сообщение о статусе
+     * @param success Успешность операции
+     */
+    private void updateStatus(String message, boolean success) {
+        statusLabel.setText(success ? "✅ " + message : "❌ " + message);
+        statusLabel.setStyle(success ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+    }
+    
+    /**
+     * Обновление статистики ошибок
+     * @param corrected Количество исправленных ошибок
+     * @param uncorrected Количество неисправленных ошибок
+     */
+    private void updateErrorStats(int corrected, int uncorrected) {
+        uncorrectedErrorsLabel.setText("Неисправлено ошибок: " + uncorrected);
     }
 
+    /**
+     * Обработчик нажатия кнопки загрузки изображения
+     */
     @FXML
     protected void onLoadImageButtonClick() {
         FileChooser fileChooser = new FileChooser();
@@ -121,6 +150,9 @@ public class HelloController {
         }
     }
 
+    /**
+     * Обработчик нажатия кнопки сохранения изображения
+     */
     @FXML
     protected void onSaveImageButtonClick() {
         if (outputImageView.getImage() == null) {
@@ -146,13 +178,16 @@ public class HelloController {
         }
     }
 
+    /**
+     * Обработчик нажатия кнопки настройки блочного кода
+     */
     @FXML
     protected void onSetupBlockCodeButtonClick() {
         try {
             String[] matrixRows = matrixTextArea.getText().trim().split("\n");
             List<String> matrix = new ArrayList<>(Arrays.asList(matrixRows));
 
-            // Check matrix
+            // Проверка типа матрицы
             String matrixType = ((RadioButton)matrixTypeGroup.getSelectedToggle()).getText().startsWith("G") ? "G" : "H";
 
             if (matrix.isEmpty()) {
@@ -165,7 +200,7 @@ public class HelloController {
                 }
             }
 
-            // Setup block code
+            // Настройка блочного кода
             boolean result = blockCoder.setupCode(matrix, matrixType);
 
             if (result) {
@@ -184,51 +219,37 @@ public class HelloController {
         }
     }
 
+    /**
+     * Обработчик нажатия кнопки настройки сверточного кода
+     */
     @FXML
     protected void onSetupConvolutionalCodeButtonClick() {
         try {
             String[] polyLines = polynomialsTextArea.getText().trim().split("\n");
-            List<String> polynomials = new ArrayList<>();
+            List<int[]> polynomials = new ArrayList<>();
 
             for (String line : polyLines) {
                 if (!line.trim().isEmpty()) {
-                    // Remove all whitespace and split by commas
-                    String[] values = line.trim().replaceAll("\\s+", "").split(",");
-                    
-                    // Convert array of values to a single polynomial
-                    StringBuilder polyBuilder = new StringBuilder();
-                    for (String value : values) {
-                        if (value.matches("^[0-9]+$")) {
-                            // Convert decimal to binary
-                            int decimalValue = Integer.parseInt(value);
-                            String binaryValue = Integer.toBinaryString(decimalValue);
-                            polyBuilder.append(binaryValue);
-                        } else {
-                            log("Warning: Invalid polynomial value '" + value + "'. Only decimal numbers are allowed.", true);
-                        }
+                    String[] indices = line.split(",");
+                    int[] poly = new int[indices.length];
+                    for (int i = 0; i < indices.length; i++) {
+                        poly[i] = Integer.parseInt(indices[i].trim());
                     }
-                    
-                    // Add the polynomial if it's not empty
-                    if (polyBuilder.length() > 0) {
-                        polynomials.add(polyBuilder.toString());
-                    }
+                    polynomials.add(poly);
                 }
             }
 
             if (polynomials.isEmpty()) {
-                throw new IllegalArgumentException("No valid polynomials could be converted");
+                throw new IllegalArgumentException("No polynomials specified");
             }
 
-            // Create a new convolutional coder with the specified polynomials
-            convCoder = new ConvolutionalCoder(polynomials, 3); // Using constraint length of 3
+            convCoder.setPolynomials(polynomials);
+            convCoder.setVerbose(verboseCheckBox.isSelected());
 
             log("Convolutional code setup: " + polynomials.size() + " polynomials");
             StringBuilder sb = new StringBuilder("Polynomials: ");
-            for (int i = 0; i < polynomials.size(); i++) {
-                sb.append(polynomials.get(i));
-                if (i < polynomials.size() - 1) {
-                    sb.append(", ");
-                }
+            for (int[] poly : polynomials) {
+                sb.append(Arrays.toString(poly)).append(" ");
             }
             log(sb.toString());
 
@@ -238,426 +259,657 @@ public class HelloController {
     }
 
     /**
-     * Save intermediate image if the checkbox is selected
-     * @param image The image to save
-     * @param stageNumber The stage number
-     * @param stageName The name of the processing stage
-     * @return true if the image was saved, false otherwise
+     * Обработчик нажатия кнопки запуска каскадного кодирования
      */
-    private boolean saveIntermediateImage(BufferedImage image, int stageNumber, String stageName) {
-        if (saveIntermediateImagesCheckBox.isSelected() && image != null) {
-            try {
-                String fileName = String.format("intermediate_%02d_%s.png", stageNumber, stageName);
-                ImageUtils.saveImage(image, fileName);
-                log("Saved intermediate image: " + fileName);
-                return true;
-            } catch (Exception e) {
-                log("Error saving intermediate image: " + e.getMessage(), true);
-                return false;
-            }
-        }
-        return false;
-    }
-
     @FXML
-    private void onRunCascadeCodingButtonClick() {
+    protected void onRunCascadeCodingButtonClick() {
         if (inputImage == null) {
-            showError("Please load an image first");
+            updateStatus("Сначала загрузите изображение", false);
+            return;
+        }
+        
+        if (blockCoder == null || blockCoder.getCodeWords() == null || blockCoder.getCodeWords().isEmpty()) {
+            updateStatus("Сначала настройте блочный код", false);
             return;
         }
 
-        // Reset progress
-        progressBar.setProgress(0);
-        progressLabel.setText("0%");
-
-        // Save original image as intermediate
-        saveIntermediateImage(inputImage, 0, "original");
-
-        long startTime = System.currentTimeMillis();
-        long stageStartTime, stageEndTime;
-        
-        // Общее количество этапов для расчета прогресса
-        final int totalStages = 12; // 0-11 этапы
-        final AtomicInteger currentStage = new AtomicInteger(0);
-        
-        // Функция для обновления прогресса
-        Runnable updateProgress = () -> {
-            double progress = (double) currentStage.get() / totalStages;
-            Platform.runLater(() -> {
-                progressBar.setProgress(progress);
-                progressLabel.setText(String.format("%.0f%%", progress * 100));
-            });
-        };
-        
-        // 1. Convert image to binary
-        stageStartTime = System.currentTimeMillis();
-        log("1. Converting image to binary...");
-        List<String> binaryRows = ImageUtils.imageToBinary(inputImage);
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Binary conversion completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Binary data:", binaryRows.subList(0, Math.min(3, binaryRows.size())));
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // Display binary image
-        BufferedImage binaryImage = ImageUtils.binaryToImage(binaryRows, inputImage.getHeight(), inputImage.getWidth());
-        saveIntermediateImage(binaryImage, 2, "binary");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 2. Block encoding
-        stageStartTime = System.currentTimeMillis();
-        log("2. Block encoding...");
-        List<String> encodedBlockRows = new ArrayList<>();
-        
-        for (String row : binaryRows) {
-            StringBuilder encodedRow = new StringBuilder();
-            int blockLength = blockCoder.getN(); // Get the block length (n)
-            int infoLength = blockCoder.getK(); // Get the information length (k)
-            
-            // Process the row in blocks of length k (information length)
-            for (int i = 0; i < row.length(); i += infoLength) {
-                // Get a block of length k, padding with zeros if necessary
-                String infoBlock = row.substring(i, Math.min(i + infoLength, row.length()));
-                if (infoBlock.length() < infoLength) {
-                    infoBlock = infoBlock + "0".repeat(infoLength - infoBlock.length());
-                }
-                
-                try {
-                    // Encode the information block
-                    String encodedBlock = blockCoder.encode(infoBlock);
-                    encodedRow.append(encodedBlock);
-                } catch (IllegalArgumentException e) {
-                    log("Warning: Block encoding error: " + e.getMessage(), true);
-                    // If encoding fails, pad with zeros
-                    encodedRow.append("0".repeat(blockLength));
-                }
-            }
-            
-            encodedBlockRows.add(encodedRow.toString());
-        }
-        
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Block encoding completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Block encoded data:", encodedBlockRows.subList(0, Math.min(3, encodedBlockRows.size())));
-
-        // Display block encoded image
-        BufferedImage blockEncodedImage = ImageUtils.binaryToImage(encodedBlockRows, inputImage.getHeight(), inputImage.getWidth());
-        blockEncodedImageView.setImage(SwingFXUtils.toFXImage(blockEncodedImage, null));
-        log("Block encoded image displayed");
-        saveIntermediateImage(blockEncodedImage, 3, "block_encoded");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 3. Interleaving
-        stageStartTime = System.currentTimeMillis();
-        log("3. Interleaving...");
-        List<String> interleavedRows = new ArrayList<>();
-        for (String row : encodedBlockRows) {
-            int[] dims = interleaver.calculateDimensions(row.length());
-            interleaver.setDimensions(dims[0], dims[1]);
-            String interleavedRow = interleaver.interleave(row);
-            interleavedRows.add(interleavedRow);
-        }
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Interleaving completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Interleaved data:", interleavedRows.subList(0, Math.min(3, interleavedRows.size())));
-
-        // Display interleaved image
-        BufferedImage interleavedImage = ImageUtils.binaryToImage(interleavedRows, inputImage.getHeight(), inputImage.getWidth());
-        saveIntermediateImage(interleavedImage, 4, "interleaved");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 4. Convolutional encoding
-        stageStartTime = System.currentTimeMillis();
-        log("4. Convolutional encoding...");
-        List<String> convEncodedRows = ParallelProcessor.processParallelWithProgress(
-            interleavedRows,
-            row -> convCoder.encode(row),
-            completed -> {
-                // Обновляем прогресс внутри этапа
-                double stageProgress = (double) completed / interleavedRows.size();
-                double totalProgress = (currentStage.get() + stageProgress) / totalStages;
-                Platform.runLater(() -> {
-                    progressBar.setProgress(totalProgress);
-                    progressLabel.setText(String.format("%.0f%%", totalProgress * 100));
-                });
-                return null;
-            }
-        );
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Convolutional encoding completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Convolutional encoded data:", convEncodedRows.subList(0, Math.min(3, convEncodedRows.size())));
-
-        // Display convolutional encoded image
-        BufferedImage convEncodedImage = ImageUtils.binaryToImage(convEncodedRows, inputImage.getHeight(), inputImage.getWidth());
-        saveIntermediateImage(convEncodedImage, 5, "conv_encoded");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 5. Introduce errors to encoded data
-        stageStartTime = System.currentTimeMillis();
-        log("5. Introducing errors to encoded data...");
-        List<String> noisyEncodedRows = new ArrayList<>();
-        double errorProbability = errorRate.get() / 100.0; // Convert percentage to probability
-        for (String row : convEncodedRows) {
-            noisyEncodedRows.add(ImageUtils.introduceErrors(row, errorProbability));
-        }
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Error introduction completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        log(String.format("Using error probability: %.2f%%", errorRate.get()));
-        saveIntermediateData("Noisy encoded data:", noisyEncodedRows.subList(0, Math.min(3, noisyEncodedRows.size())));
-
-        // Display noisy encoded image
-        BufferedImage noisyEncodedImage = ImageUtils.binaryToImage(noisyEncodedRows, inputImage.getHeight(), inputImage.getWidth());
-        blockEncodedWithErrorsImageView.setImage(SwingFXUtils.toFXImage(noisyEncodedImage, null));
-        log("Noisy encoded image displayed");
-        saveIntermediateImage(noisyEncodedImage, 6, "noisy_encoded");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // Create noisy image by decoding the noisy encoded data without error correction
-        log("Creating noisy image by decoding noisy encoded data without error correction...");
-        List<String> noisyDecodedRows = new ArrayList<>();
-        
-        // 6. Deinterleaving without error correction
-        for (int i = 0; i < noisyEncodedRows.size(); i++) {
-            String row = noisyEncodedRows.get(i);
-            
-            // Calculate optimal dimensions for this row
-            int[] dims = interleaver.calculateDimensions(row.length());
-            
-            // Set dimensions and deinterleave
-            interleaver.setDimensions(dims[0], dims[1]);
-            String deinterleavedRow = interleaver.deinterleave(row);
-            
-            noisyDecodedRows.add(deinterleavedRow);
-        }
-        
-        // 7. Block decoding without error correction
-        List<String> noisyBlockDecodedRows = new ArrayList<>();
-        for (String row : noisyDecodedRows) {
-            StringBuilder decodedRow = new StringBuilder();
-            int blockLength = blockCoder.getN(); // Get the block length (n)
-            int infoLength = blockCoder.getK(); // Get the information length (k)
-            
-            // Process the row in blocks of length n
-            for (int i = 0; i < row.length(); i += blockLength) {
-                // Get a block of length n, padding with zeros if necessary
-                String block = row.substring(i, Math.min(i + blockLength, row.length()));
-                if (block.length() < blockLength) {
-                    block = block + "0".repeat(blockLength - block.length());
-                }
-                
-                // Just take the first k bits without error correction
-                decodedRow.append(block.substring(0, Math.min(infoLength, block.length())));
-            }
-            
-            noisyBlockDecodedRows.add(decodedRow.toString());
-        }
-        
-        // Create noisy image from decoded data without error correction
-        BufferedImage noisyImage = ImageUtils.binaryToImage(noisyBlockDecodedRows, inputImage.getHeight(), inputImage.getWidth());
-        noisyImageView.setImage(SwingFXUtils.toFXImage(noisyImage, null));
-        log("Noisy image displayed (decoded without error correction)");
-        saveIntermediateImage(noisyImage, 7, "noisy");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // --- Decoding with error correction ---
-        log("Starting decoding process with error correction...");
-
-        // 8. Convolutional decoding (Viterbi)
-        stageStartTime = System.currentTimeMillis();
-        log("8. Convolutional decoding...");
-        List<String> convDecodedRows = ParallelProcessor.processParallelWithProgress(
-            noisyEncodedRows,
-            row -> {
-                // Apply Viterbi decoding to correct errors
-                String decoded = convCoder.decode(row);
-                return decoded;
-            },
-            completed -> {
-                // Обновляем прогресс внутри этапа
-                double stageProgress = (double) completed / noisyEncodedRows.size();
-                double totalProgress = (currentStage.get() + stageProgress) / totalStages;
-                Platform.runLater(() -> {
-                    progressBar.setProgress(totalProgress);
-                    progressLabel.setText(String.format("%.0f%%", totalProgress * 100));
-                });
-                return null;
-            }
-        );
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Convolutional decoding completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Convolutional decoded data:", convDecodedRows.subList(0, Math.min(3, convDecodedRows.size())));
-
-        // Display convolutional decoded image
-        BufferedImage convDecodedImage = ImageUtils.binaryToImage(convDecodedRows, inputImage.getHeight(), inputImage.getWidth());
-        saveIntermediateImage(convDecodedImage, 8, "conv_decoded");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 9. Deinterleaving
-        stageStartTime = System.currentTimeMillis();
-        log("9. Deinterleaving...");
-        List<String> deinterleavedRows = new ArrayList<>();
-        for (int i = 0; i < convDecodedRows.size(); i++) {
-            String row = convDecodedRows.get(i);
-            
-            // Calculate optimal dimensions for this row
-            int[] dims = interleaver.calculateDimensions(row.length());
-            log("Row " + i + " deinterleaving dimensions: " + dims[0] + "x" + dims[1]);
-            
-            // Set dimensions and deinterleave
-            interleaver.setDimensions(dims[0], dims[1]);
-            String deinterleavedRow = interleaver.deinterleave(row);
-            
-            // Log the first few characters for debugging
-            if (i < 3) {
-                log("Row " + i + " first 20 chars before deinterleaving: " + 
-                    (row.length() > 20 ? row.substring(0, 20) + "..." : row));
-                log("Row " + i + " first 20 chars after deinterleaving: " + 
-                    (deinterleavedRow.length() > 20 ? deinterleavedRow.substring(0, 20) + "..." : deinterleavedRow));
-            }
-            
-            deinterleavedRows.add(deinterleavedRow);
-        }
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Deinterleaving completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Deinterleaved data:", deinterleavedRows.subList(0, Math.min(3, deinterleavedRows.size())));
-
-        // Display deinterleaved image
-        BufferedImage deinterleavedImage = ImageUtils.binaryToImage(deinterleavedRows, inputImage.getHeight(), inputImage.getWidth());
-        saveIntermediateImage(deinterleavedImage, 9, "deinterleaved");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 10. Block decoding
-        stageStartTime = System.currentTimeMillis();
-        log("10. Block decoding...");
-        List<String> decodedRows = new ArrayList<>();
-        
-        for (String row : deinterleavedRows) {
-            StringBuilder decodedRow = new StringBuilder();
-            int blockLength = blockCoder.getN(); // Get the block length (n)
-            int infoLength = blockCoder.getK(); // Get the information length (k)
-            
-            // Process the row in blocks of length n
-            for (int i = 0; i < row.length(); i += blockLength) {
-                // Get a block of length n, padding with zeros if necessary
-                String block = row.substring(i, Math.min(i + blockLength, row.length()));
-                if (block.length() < blockLength) {
-                    block = block + "0".repeat(blockLength - block.length());
-                }
-                
-                try {
-                    // Decode the block and get only the information bits
-                    String decodedBlock = blockCoder.decode(block);
-                    decodedRow.append(decodedBlock.substring(0, Math.min(infoLength, decodedBlock.length())));
-                } catch (IllegalArgumentException e) {
-                    log("Warning: Block decoding error: " + e.getMessage(), true);
-                    // If decoding fails, use the first k bits of the original block
-                    decodedRow.append(block.substring(0, Math.min(infoLength, block.length())));
-                }
-            }
-            
-            decodedRows.add(decodedRow.toString());
-        }
-        
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Block decoding completed in %.2f seconds", (stageEndTime - stageStartTime) / 1000.0));
-        saveIntermediateData("Decoded data:", decodedRows.subList(0, Math.min(3, decodedRows.size())));
-
-        // Display block decoded image
-        BufferedImage blockDecodedImage = ImageUtils.binaryToImage(decodedRows, inputImage.getHeight(), inputImage.getWidth());
-        saveIntermediateImage(blockDecodedImage, 10, "block_decoded");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-
-        // 11. Convert back to image and display in output image view
-        stageStartTime = System.currentTimeMillis();
-        log("11. Converting decoded data back to image...");
-        
-        // Ensure the decoded data has the correct length
-        for (int i = 0; i < decodedRows.size(); i++) {
-            String decodedRow = decodedRows.get(i);
-            
-            // If the decoded row is shorter than expected, pad with zeros
-            int expectedLength = 24 * inputImage.getWidth(); // 24 bits per pixel
-            if (decodedRow.length() < expectedLength) {
-                decodedRow = decodedRow + "0".repeat(expectedLength - decodedRow.length());
-                decodedRows.set(i, decodedRow);
-            }
-            // If the decoded row is longer than expected, truncate
-            else if (decodedRow.length() > expectedLength) {
-                decodedRow = decodedRow.substring(0, expectedLength);
-                decodedRows.set(i, decodedRow);
-            }
-        }
-        
-        // Create decoded image
-        BufferedImage decodedImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-        
-        // Process each row of binary data
-        for (int y = 0; y < inputImage.getHeight(); y++) {
-            String binaryRow = decodedRows.get(y);
-            
-            // Process each pixel (24 bits per pixel - 8 for each RGB component)
-            for (int x = 0; x < inputImage.getWidth(); x++) {
-                int pixelIndex = x * 24;
-                
-                // Extract RGB values from binary string
-                int r = Integer.parseInt(binaryRow.substring(pixelIndex, pixelIndex + 8), 2);
-                int g = Integer.parseInt(binaryRow.substring(pixelIndex + 8, pixelIndex + 16), 2);
-                int b = Integer.parseInt(binaryRow.substring(pixelIndex + 16, pixelIndex + 24), 2);
-                
-                // Create RGB color
-                int rgb = (r << 16) | (g << 8) | b;
-                
-                // Set pixel in the image
-                decodedImage.setRGB(x, y, rgb);
-            }
-        }
-        
-        // Display decoded image
-        outputImageView.setImage(SwingFXUtils.toFXImage(decodedImage, null));
-        log("Decoded image displayed");
-        
-        // Save decoded image as intermediate
-        saveIntermediateImage(decodedImage, 11, "final");
-        currentStage.incrementAndGet();
-        updateProgress.run();
-        
-        // Save decoded image
         try {
+            // Clear only intermediate data file
+            ImageUtils.clearIntermediateData(intermediateDataFile);
+
+            long startTime = System.currentTimeMillis();
+            log("Начало каскадного кодирования...");
+            log(String.format("Вероятность ошибки: %.2f%%", errorRate.get()));
+            log(String.format("Битов затронуто на пиксель: %d", 25 - bitsPerPixel.get()));
+            log(String.format("Многопоточность: %s", multiThreadingCheckBox.isSelected() ? "включена" : "выключена"));
+
+            // 1. Convert image to binary data
+            long stageStartTime = System.currentTimeMillis();
+            log("1. Преобразование изображения в бинарные данные...");
+            List<String> binaryRows = ImageUtils.imageToBinary(inputImage);
+            saveIntermediateData("Бинарные данные изображения:", binaryRows.subList(0, Math.min(3, binaryRows.size())));
+            long stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // 2. Block encoding
+            stageStartTime = System.currentTimeMillis();
+            log("2. Блочное кодирование...");
+            List<String> encodedBlockRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded block encoding
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                log("Используется многопоточность: " + numThreads + " потоков");
+                
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < binaryRows.size(); j += numThreads) {
+                            String row = binaryRows.get(j);
+                            String encodedRow = blockCoder.encode(row);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(encodedRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < binaryRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        encodedBlockRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded block encoding
+                for (String row : binaryRows) {
+                    String encodedRow = blockCoder.encode(row);
+                    encodedBlockRows.add(encodedRow);
+                }
+            }
+            
+            saveIntermediateData("Блочно закодированные данные:", encodedBlockRows.subList(0, Math.min(3, encodedBlockRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+            
+            // Display encoded image
+            BufferedImage encodedImage = ImageUtils.binaryToImage(encodedBlockRows, inputImage.getHeight(), inputImage.getWidth());
+            blockEncodedImageView.setImage(SwingFXUtils.toFXImage(encodedImage, null));
+
+            // 3. Interleaving
+            stageStartTime = System.currentTimeMillis();
+            log("3. Перемежение...");
+            List<String> interleavedRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded interleaving
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < encodedBlockRows.size(); j += numThreads) {
+                            String row = encodedBlockRows.get(j);
+                            int[] dims = interleaver.calculateDimensions(row.length());
+                            interleaver.setDimensions(dims[0], dims[1]);
+                            String interleavedRow = interleaver.interleave(row);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(interleavedRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < encodedBlockRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        interleavedRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded interleaving
+                for (String row : encodedBlockRows) {
+                    int[] dims = interleaver.calculateDimensions(row.length());
+                    interleaver.setDimensions(dims[0], dims[1]);
+                    String interleavedRow = interleaver.interleave(row);
+                    interleavedRows.add(interleavedRow);
+                }
+            }
+            
+            saveIntermediateData("Перемеженные данные:", interleavedRows.subList(0, Math.min(3, interleavedRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // 4. Convolutional encoding
+            stageStartTime = System.currentTimeMillis();
+            log("4. Сверточное кодирование...");
+            List<String> convEncodedRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded convolutional encoding
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < interleavedRows.size(); j += numThreads) {
+                            String row = interleavedRows.get(j);
+                            String convEncodedRow = convCoder.convolutionalEncode(row);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(convEncodedRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < interleavedRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        convEncodedRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded convolutional encoding
+                for (String row : interleavedRows) {
+                    String convEncodedRow = convCoder.convolutionalEncode(row);
+                    convEncodedRows.add(convEncodedRow);
+                }
+            }
+            
+            saveIntermediateData("Сверточно закодированные данные:", convEncodedRows.subList(0, Math.min(3, convEncodedRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // 5. Introduce errors
+            stageStartTime = System.currentTimeMillis();
+            log("5. Внесение ошибок...");
+            List<String> noisyRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded error introduction
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < convEncodedRows.size(); j += numThreads) {
+                            String row = convEncodedRows.get(j);
+                            // Invert the slider value (25 - slider value)
+                            int bitsToAffect = 25 - bitsPerPixel.get();
+                            String noisyRow = ImageUtils.introduceErrorsPerPixel(row, errorRate.get() / 100.0, bitsToAffect);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(noisyRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < convEncodedRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        noisyRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded error introduction
+                for (String row : convEncodedRows) {
+                    // Invert the slider value (25 - slider value)
+                    int bitsToAffect = 25 - bitsPerPixel.get();
+                    String noisyRow = ImageUtils.introduceErrorsPerPixel(row, errorRate.get() / 100.0, bitsToAffect);
+                    noisyRows.add(noisyRow);
+                }
+            }
+            
+            saveIntermediateData("Зашумленные данные:", noisyRows.subList(0, Math.min(3, noisyRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+            
+            // Display encoded image with errors
+            BufferedImage encodedWithErrorsImage = ImageUtils.binaryToImage(noisyRows, inputImage.getHeight(), inputImage.getWidth());
+            blockEncodedWithErrorsImageView.setImage(SwingFXUtils.toFXImage(encodedWithErrorsImage, null));
+
+            // Create noisy image without coding
+            List<String> noisyUnencodedRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded error introduction for unencoded image
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < binaryRows.size(); j += numThreads) {
+                            String row = binaryRows.get(j);
+                            // Invert the slider value (25 - slider value)
+                            int bitsToAffect = 25 - bitsPerPixel.get();
+                            String noisyRow = ImageUtils.introduceErrorsPerPixel(row, errorRate.get() / 100.0, bitsToAffect);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(noisyRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < binaryRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        noisyUnencodedRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded error introduction for unencoded image
+                for (String row : binaryRows) {
+                    // Invert the slider value (25 - slider value)
+                    int bitsToAffect = 25 - bitsPerPixel.get();
+                    String noisyRow = ImageUtils.introduceErrorsPerPixel(row, errorRate.get() / 100.0, bitsToAffect);
+                    noisyUnencodedRows.add(noisyRow);
+                }
+            }
+            
+            BufferedImage noisyImage = ImageUtils.binaryToImage(noisyUnencodedRows, inputImage.getHeight(), inputImage.getWidth());
+            noisyImageView.setImage(SwingFXUtils.toFXImage(noisyImage, null));
+
+            // --- Decoding ---
+            log("--- Начало декодирования ---");
+
+            // 6. Convolutional decoding
+            stageStartTime = System.currentTimeMillis();
+            log("6. Сверточное декодирование...");
+            List<String> convDecodedRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded convolutional decoding
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < noisyRows.size(); j += numThreads) {
+                            String row = noisyRows.get(j);
+                            String convDecodedRow = convCoder.viterbiDecode(row);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(convDecodedRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < noisyRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        convDecodedRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded convolutional decoding
+                for (String row : noisyRows) {
+                    String convDecodedRow = convCoder.viterbiDecode(row);
+                    convDecodedRows.add(convDecodedRow);
+                }
+            }
+            
+            saveIntermediateData("Сверточно декодированные данные:", convDecodedRows.subList(0, Math.min(3, convDecodedRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // 7. Deinterleaving
+            stageStartTime = System.currentTimeMillis();
+            log("7. Обратное перемежение...");
+            List<String> deinterleavedRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded deinterleaving
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < convDecodedRows.size(); j += numThreads) {
+                            String row = convDecodedRows.get(j);
+                            int[] dims = interleaver.calculateDimensions(row.length());
+                            interleaver.setDimensions(dims[0], dims[1]);
+                            String deinterleavedRow = interleaver.deinterleave(row);
+                            synchronized (results[threadId]) {
+                                results[threadId].add(deinterleavedRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < convDecodedRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        deinterleavedRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded deinterleaving
+                for (int i = 0; i < convDecodedRows.size(); i++) {
+                    String row = convDecodedRows.get(i);
+                    int[] dims = interleaver.calculateDimensions(row.length());
+                    interleaver.setDimensions(dims[0], dims[1]);
+                    String deinterleavedRow = interleaver.deinterleave(row);
+                    deinterleavedRows.add(deinterleavedRow);
+                }
+            }
+            
+            saveIntermediateData("Обратно перемеженные данные:", deinterleavedRows.subList(0, Math.min(3, deinterleavedRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // 8. Block decoding
+            stageStartTime = System.currentTimeMillis();
+            log("8. Блочное декодирование...");
+            List<String> decodedRows = new ArrayList<>();
+            
+            if (multiThreadingCheckBox.isSelected()) {
+                // Multi-threaded block decoding
+                int numThreads = Runtime.getRuntime().availableProcessors();
+                Thread[] threads = new Thread[numThreads];
+                List<String>[] results = new List[numThreads];
+                
+                for (int i = 0; i < numThreads; i++) {
+                    final int threadId = i;
+                    results[i] = new ArrayList<>();
+                    
+                    threads[i] = new Thread(() -> {
+                        for (int j = threadId; j < deinterleavedRows.size(); j += numThreads) {
+                            String row = deinterleavedRows.get(j);
+                            String decodedRow = blockCoder.decode(row);
+                            if (decodedRow.length() < binaryRows.get(j).length()) {
+                                decodedRow += "0".repeat(binaryRows.get(j).length() - decodedRow.length());
+                            } else if (decodedRow.length() > binaryRows.get(j).length()) {
+                                decodedRow = decodedRow.substring(0, binaryRows.get(j).length());
+                            }
+                            synchronized (results[threadId]) {
+                                results[threadId].add(decodedRow);
+                            }
+                        }
+                    });
+                    threads[i].start();
+                }
+                
+                // Wait for all threads to complete
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        log("Прерывание потока: " + e.getMessage(), true);
+                    }
+                }
+                
+                // Combine results
+                for (int i = 0; i < deinterleavedRows.size(); i++) {
+                    int threadId = i % numThreads;
+                    int index = i / numThreads;
+                    if (index < results[threadId].size()) {
+                        decodedRows.add(results[threadId].get(index));
+                    }
+                }
+            } else {
+                // Single-threaded block decoding
+                for (int i = 0; i < deinterleavedRows.size(); i++) {
+                    String row = deinterleavedRows.get(i);
+                    String decodedRow = blockCoder.decode(row);
+                    if (decodedRow.length() < binaryRows.get(i).length()) {
+                        decodedRow += "0".repeat(binaryRows.get(i).length() - decodedRow.length());
+                    } else if (decodedRow.length() > binaryRows.get(i).length()) {
+                        decodedRow = decodedRow.substring(0, binaryRows.get(i).length());
+                    }
+                    decodedRows.add(decodedRow);
+                }
+            }
+            
+            saveIntermediateData("Блочно декодированные данные:", decodedRows.subList(0, Math.min(3, decodedRows.size())));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // 9. Convert binary data back to image and display decoded image
+            stageStartTime = System.currentTimeMillis();
+            log("9. Преобразование бинарных данных в изображение...");
+            BufferedImage decodedImage = ImageUtils.binaryToImage(decodedRows, inputImage.getHeight(), inputImage.getWidth());
+            outputImageView.setImage(SwingFXUtils.toFXImage(decodedImage, null));
+            stageEndTime = System.currentTimeMillis();
+            log(String.format("Этап завершен за %.2f секунд", (stageEndTime - stageStartTime) / 1000.0));
+
+            // Save the result
             ImageUtils.saveImage(decodedImage, outputImagePath);
-            log("Decoded image saved to: " + outputImagePath);
+            
+            // Compare original and decoded images
+            boolean imagesMatch = compareImages(inputImage, decodedImage);
+            int correctedErrors = countCorrectedErrors(binaryRows, decodedRows);
+            int uncorrectedErrors = countUncorrectedErrors(binaryRows, decodedRows);
+            
+            // Update status indicators
+            if (imagesMatch) {
+                updateStatus("Декодирование успешно", true);
+            } else {
+                updateStatus("Декодирование не полностью успешно", false);
+            }
+            updateErrorCountersWithLabels(correctedErrors, uncorrectedErrors);
+            
+            long endTime = System.currentTimeMillis();
+            double totalTime = (endTime - startTime) / 1000.0;
+            log("Каскадное кодирование успешно завершено!");
+            log(String.format("Общее время выполнения: %.2f секунд", totalTime));
+            log("Декодированное изображение сохранено как: " + outputImagePath);
+            log("Промежуточные данные сохранены в: " + intermediateDataFile);
+            log(String.format("Неисправлено ошибок: %d", uncorrectedErrors));
+
         } catch (Exception e) {
-            log("Error saving decoded image: " + e.getMessage(), true);
+            log("Ошибка при каскадном кодировании: " + e.getMessage(), true);
+            e.printStackTrace();
+            updateStatus("Ошибка при кодировании", false);
+        }
+    }
+    
+    /**
+     * Сравнение двух изображений
+     * @param img1 Первое изображение
+     * @param img2 Второе изображение
+     * @return true если изображения идентичны, false в противном случае
+     */
+    private boolean compareImages(BufferedImage img1, BufferedImage img2) {
+        if (img1.getWidth() != img2.getWidth() || img1.getHeight() != img2.getHeight()) {
+            return false;
         }
         
-        stageEndTime = System.currentTimeMillis();
-        log(String.format("Image conversion completed in %.2f seconds", (stageEndTime - startTime) / 1000.0));
+        for (int y = 0; y < img1.getHeight(); y++) {
+            for (int x = 0; x < img1.getWidth(); x++) {
+                int rgb1 = img1.getRGB(x, y);
+                int rgb2 = img2.getRGB(x, y);
+                
+                // Extract RGB components
+                int r1 = (rgb1 >> 16) & 0xFF;
+                int g1 = (rgb1 >> 8) & 0xFF;
+                int b1 = rgb1 & 0xFF;
+                
+                int r2 = (rgb2 >> 16) & 0xFF;
+                int g2 = (rgb2 >> 8) & 0xFF;
+                int b2 = rgb2 & 0xFF;
+                
+                // Check if all RGB components match
+                if (r1 != r2 || g1 != g2 || b1 != b2) {
+                    return false;
+                }
+            }
+        }
         
-        // Print total processing time
-        long totalTime = System.currentTimeMillis() - startTime;
-        log(String.format("Total processing time: %.2f seconds", totalTime / 1000.0));
-        log("Cascade coding completed successfully!");
+        return true;
+    }
+    
+    /**
+     * Подсчет исправленных ошибок
+     * @param original Исходные данные
+     * @param decoded Декодированные данные
+     * @return Количество исправленных ошибок
+     */
+    private int countCorrectedErrors(List<String> original, List<String> decoded) {
+        int count = 0;
         
-        // Устанавливаем прогресс-бар на 100% в конце
-        Platform.runLater(() -> {
-            progressBar.setProgress(1.0);
-            progressLabel.setText("100%");
-        });
+        for (int i = 0; i < Math.min(original.size(), decoded.size()); i++) {
+            String origRow = original.get(i);
+            String decodedRow = decoded.get(i);
+            
+            // Count bits that were different in the noisy image but corrected in the decoded image
+            for (int j = 0; j < Math.min(origRow.length(), decodedRow.length()); j++) {
+                if (origRow.charAt(j) != decodedRow.charAt(j)) {
+                    count++;
+                }
+            }
+        }
+        
+        return count;
+    }
+    
+    /**
+     * Подсчет неисправленных ошибок
+     * @param original Исходные данные
+     * @param decoded Декодированные данные
+     * @return Количество неисправленных ошибок
+     */
+    private int countUncorrectedErrors(List<String> original, List<String> decoded) {
+        int count = 0;
+        
+        for (int i = 0; i < Math.min(original.size(), decoded.size()); i++) {
+            String origRow = original.get(i);
+            String decodedRow = decoded.get(i);
+            
+            // Count bits that are still different in the decoded image
+            for (int j = 0; j < Math.min(origRow.length(), decodedRow.length()); j++) {
+                if (origRow.charAt(j) != decodedRow.charAt(j)) {
+                    count++;
+                }
+            }
+        }
+        
+        return count;
     }
 
+    /**
+     * Обработчик нажатия кнопки очистки лога
+     */
     @FXML
     protected void onClearLogButtonClick() {
         clearLog();
     }
 
+    /**
+     * Обработчик нажатия кнопки сохранения лога
+     */
     @FXML
     protected void onSaveLogButtonClick() {
         FileChooser fileChooser = new FileChooser();
@@ -669,19 +921,17 @@ public class HelloController {
         File file = fileChooser.showSaveDialog(logTextArea.getScene().getWindow());
         if (file != null) {
             try {
-                String logContent = logTextArea.getText();
-                if (logContent != null && !logContent.isEmpty()) {
-                    java.nio.file.Files.writeString(file.toPath(), logContent);
-                    log("Log saved to: " + file.getName());
-                } else {
-                    log("No log content to save", true);
-                }
+                java.nio.file.Files.writeString(file.toPath(), logTextArea.getText());
+                log("Log saved to: " + file.getName());
             } catch (IOException e) {
                 log("Error saving log: " + e.getMessage(), true);
             }
         }
     }
 
+    /**
+     * Обработчик нажатия кнопки открытия файла с промежуточными данными
+     */
     @FXML
     protected void onOpenIntermediateDataButtonClick() {
         File file = new File(intermediateDataFile);
@@ -696,46 +946,108 @@ public class HelloController {
         }
     }
 
+    /**
+     * Добавление сообщения в лог
+     * @param message Сообщение для добавления
+     */
     private void log(String message) {
         log(message, false);
     }
 
+    /**
+     * Добавление сообщения в лог с указанием типа
+     * @param message Сообщение для добавления
+     * @param isError true если это сообщение об ошибке
+     */
     private void log(String message, boolean isError) {
         String prefix = isError ? "ERROR: " : "";
-        Platform.runLater(() -> {
-            try {
-                logTextArea.appendText(prefix + message + "\n");
-                logTextArea.setScrollTop(Double.MAX_VALUE);
-            } catch (Exception e) {
-                System.err.println("Error updating log: " + e.getMessage());
-            }
-        });
+        logTextArea.appendText(prefix + message + "\n");
+        logTextArea.setScrollTop(Double.MAX_VALUE); // Прокрутка вниз
     }
 
+    /**
+     * Очистка лога
+     */
     private void clearLog() {
-        Platform.runLater(() -> {
-            try {
-                logTextArea.clear();
-            } catch (Exception e) {
-                System.err.println("Error clearing log: " + e.getMessage());
-            }
-        });
+        logTextArea.clear();
     }
 
+    /**
+     * Сохранение промежуточных данных
+     * @param header Заголовок данных
+     * @param data Список данных для сохранения
+     */
     private void saveIntermediateData(String header, List<String> data) {
         ImageUtils.saveIntermediateData(header, intermediateDataFile);
         for (int i = 0; i < data.size(); i++) {
             String row = data.get(i);
-            int displayLength = Math.min(100, row.length());
             ImageUtils.saveIntermediateData(
-                String.format("Row %d (first %d bits): %s...",
-                    i, displayLength, row.substring(0, displayLength)),
+                String.format("Row %d (first 100 bits): %s...",
+                    i, row.substring(0, Math.min(100, row.length()))),
                 intermediateDataFile
             );
         }
     }
 
-    private void showError(String message) {
-        log(message, true);
+    /**
+     * Сброс счетчиков ошибок
+     */
+    private void resetErrorCounters() {
+        uncorrectedErrorsLabel.setText("0");
+        imageMatchPercentLabel.setText("0%");
+    }
+
+    /**
+     * Обновление счетчиков ошибок с метками
+     * @param correctedErrors Количество исправленных ошибок
+     * @param uncorrectedErrors Количество неисправленных ошибок
+     */
+    private void updateErrorCountersWithLabels(int correctedErrors, int uncorrectedErrors) {
+        uncorrectedErrorsLabel.setText(String.valueOf(uncorrectedErrors));
+        
+        // Calculate image match percentage based on RGB pixel matching
+        if (inputImage != null && outputImageView.getImage() != null) {
+            BufferedImage decodedImage = SwingFXUtils.fromFXImage(outputImageView.getImage(), null);
+            double matchPercent = calculateImageMatchPercentage(inputImage, decodedImage);
+            imageMatchPercentLabel.setText(String.format("%.2f%%", matchPercent));
+        }
+    }
+
+    /**
+     * Вычисление процента соответствия изображений
+     * @param original Исходное изображение
+     * @param decoded Декодированное изображение
+     * @return Процент соответствия
+     */
+    private double calculateImageMatchPercentage(BufferedImage original, BufferedImage decoded) {
+        if (original.getWidth() != decoded.getWidth() || original.getHeight() != decoded.getHeight()) {
+            return 0.0;
+        }
+
+        int totalPixels = original.getWidth() * original.getHeight();
+        int matchingPixels = 0;
+
+        for (int y = 0; y < original.getHeight(); y++) {
+            for (int x = 0; x < original.getWidth(); x++) {
+                int rgb1 = original.getRGB(x, y);
+                int rgb2 = decoded.getRGB(x, y);
+                
+                // Extract RGB components
+                int r1 = (rgb1 >> 16) & 0xFF;
+                int g1 = (rgb1 >> 8) & 0xFF;
+                int b1 = rgb1 & 0xFF;
+                
+                int r2 = (rgb2 >> 16) & 0xFF;
+                int g2 = (rgb2 >> 8) & 0xFF;
+                int b2 = rgb2 & 0xFF;
+                
+                // Check if all RGB components match
+                if (r1 == r2 && g1 == g2 && b1 == b2) {
+                    matchingPixels++;
+                }
+            }
+        }
+
+        return (matchingPixels * 100.0) / totalPixels;
     }
 }
