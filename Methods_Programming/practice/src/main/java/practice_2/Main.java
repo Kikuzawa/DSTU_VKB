@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 class Main {
     public static void main(String[] args) {
-        System.out.print("Введите цепочку символов для построения дерева (слитно): ");
+        System.out.print("Введите цепочку символов: ");
         var input = System.console().readLine();
 
         if (input == null || input.isBlank()) {
-            System.out.println("Ошибка: пустая строка. Завершение программы.");
+            System.out.println("Ошибка: пустая строка. Завершение.");
             return;
         }
 
@@ -22,13 +22,13 @@ class Main {
             elements.add(ch);
         }
 
-        System.out.print("Введите под каким заданием дерево вы хотите увидеть? (1, 2, 3): ");
+        System.out.print("Какое дерево? (1, 2, 3): ");
 
         AbstractTree<Character> tree = switch (System.console().readLine()) {
             case "1" -> new Tree<>(elements);
             case "2" -> new BalancedTree<>(elements);
             case "3" -> new FullBalancedTree<>(elements);
-            default -> throw new IllegalStateException("Неизвестное задание");
+            default -> throw new IllegalStateException("Ошибка! Неправильный номер");
         };
 
         System.out.println(tree);
