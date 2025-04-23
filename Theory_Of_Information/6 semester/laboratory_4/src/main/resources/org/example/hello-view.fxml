@@ -19,22 +19,22 @@
         <Text layoutX="14.0" layoutY="36.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Cyclic Code Laboratory" />
         
         <VBox layoutX="23.0" layoutY="59.0" spacing="5">
-            <Label text="Input Type:" />
-            <RadioButton fx:id="polynomialInput" selected="true" text="Polynomial" />
-            <RadioButton fx:id="matrixInput" text="Generator Matrix" />
+            <Label text="Тип ввода" />
+            <RadioButton fx:id="polynomialInput" selected="true" text="Полином" />
+            <RadioButton fx:id="matrixInput" text="Порождающая матрица" />
         </VBox>
 
         <HBox layoutX="14.0" layoutY="144.0" spacing="5">
-            <Label text="Parameter n:" />
+            <Label text="Параметр n" />
             <TextField fx:id="nParameterField" promptText="7" text="7" />
         </HBox>
 
         <HBox layoutX="362.0" layoutY="29.0" spacing="5">
-            <Label text="Polynomial:" />
+            <Label text="Полином" />
             <TextField fx:id="polynomialField" promptText="x^3 + x + 1" text="x^3 + x + 1" />
         </HBox>
 
-        <TitledPane expanded="true" layoutX="359.0" layoutY="79.0" text="Generator Matrix">
+        <TitledPane expanded="true" layoutX="359.0" layoutY="79.0" text="Порождающая матрица">
             <VBox spacing="5">
                 <TableView fx:id="generatorMatrixTable" maxHeight="250.0" maxWidth="250.0">
                     <columns>
@@ -48,15 +48,15 @@
                     </columns>
                 </TableView>
                 <HBox spacing="5">
-                    <Button fx:id="addRowButton" onAction="#onAddRowButtonClick" text="Add Row" />
-                    <Button fx:id="removeRowButton" onAction="#onRemoveRowButtonClick" text="Remove Row" />
+                    <Button fx:id="addRowButton" onAction="#onAddRowButtonClick" text="+" />
+                    <Button fx:id="removeRowButton" onAction="#onRemoveRowButtonClick" text="-" />
                 </HBox>
             </VBox>
         </TitledPane>
 
         <HBox layoutX="10.0" layoutY="202.0" spacing="10">
-            <Button fx:id="initButton" onAction="#onInitButtonClick" text="Initialize Code" />
-            <Button fx:id="loadFileButton" onAction="#onLoadFileButtonClick" text="Load File" />
+            <Button fx:id="initButton" onAction="#onInitButtonClick" text="Инициализация" />
+            <Button fx:id="loadFileButton" onAction="#onLoadFileButtonClick" text="Файл" />
             <Button fx:id="encodeButton" onAction="#onEncodeButtonClick" text="Encode" />
             <Button fx:id="decodeButton" onAction="#onDecodeButtonClick" text="Decode" />
         </HBox>
@@ -66,20 +66,20 @@
         <CheckBox fx:id="detailedLoggingCheckBox" layoutX="1027.0" layoutY="33.0" text="Подробный вывод" />
 
         <VBox layoutX="632.0" layoutY="68.0" spacing="5">
-            <Label text="Input Text:" />
+            <Label text="Входящий текст" />
             <TextArea fx:id="inputText" prefColumnCount="40" prefRowCount="5" promptText="Введите текст или битовую строку" text="sos" />
         </VBox>
 
         <VBox layoutX="632.0" layoutY="227.0" spacing="5">
-            <Label text="Output Text:" />
+            <Label text="Выходящий текст" />
             <TextArea fx:id="outputText" editable="false" prefColumnCount="40" prefRowCount="5" promptText="Здесь будет результат кодирования/декодирования" />
         </VBox>
 
-        <TitledPane expanded="true" layoutX="14.0" layoutY="250.0" prefHeight="477.0" prefWidth="336.0" text="Process Log">
+        <TitledPane expanded="true" layoutX="14.0" layoutY="250.0" prefHeight="477.0" prefWidth="336.0" text="Логи">
             <TextArea fx:id="processLog" editable="false" prefColumnCount="40" prefRowCount="10" promptText="Здесь будут Логи" />
         </TitledPane>
 
-        <TitledPane expanded="true" layoutX="632.0" layoutY="380.0" prefHeight="347.0" prefWidth="516.0" text="Decoding Process">
+        <TitledPane expanded="true" layoutX="632.0" layoutY="380.0" prefHeight="347.0" prefWidth="516.0" text="Процесс Декодирования">
             <VBox>
                 <TableView fx:id="syndromeTable" prefHeight="200.0" prefWidth="200.0">
                     <columns>
@@ -89,11 +89,11 @@
                         <TableColumn prefWidth="40.0" text="S2" />
                     </columns>
                 </TableView>
-                <TextArea fx:id="errorCorrectionSteps" prefHeight="100.0" prefWidth="200.0" promptText="Error correction steps will be displayed here" />
+                <TextArea fx:id="errorCorrectionSteps" prefHeight="100.0" prefWidth="200.0" promptText="Здесь шаги процесса декодирования" />
             </VBox>
         </TitledPane>
 
-        <Label layoutX="359.0" layoutY="407.0" text="Parity Check Matrix:" />
+        <Label layoutX="359.0" layoutY="407.0" text="Проверочная матрица" />
         <TableView fx:id="parityCheckMatrixTable" layoutX="359.0" layoutY="439.0" maxHeight="250.0" maxWidth="250.0">
             <columns>
                 <TableColumn fx:id="pCol1" text="1" />
@@ -105,6 +105,6 @@
                 <TableColumn fx:id="pCol0" text="0" />
             </columns>
         </TableView>
-         <Button fx:id="clearLogsButton" layoutX="30.0" layoutY="741.0" onAction="#onClearLogsButtonClick" text="Clear Logs" />
+         <Button fx:id="clearLogsButton" layoutX="30.0" layoutY="741.0" onAction="#onClearLogsButtonClick" text="Очистить" />
    </children>
 </AnchorPane>

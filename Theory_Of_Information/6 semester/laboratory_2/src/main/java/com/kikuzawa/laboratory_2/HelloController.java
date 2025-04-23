@@ -393,6 +393,58 @@ public class HelloController {
         return String.join("", resultPath);
     }
 
+    public void fillTable() {
+        SumTable.getItems().clear();
+        SumTable.getColumns().clear();
+
+        // Create columns
+        for (int i = 0; i < 3; i++) {
+            TableColumn<Polynomial, String> column = new TableColumn<>("R " + (i + 1));
+            final int colIndex = i;
+
+            column.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
+            column.setOnEditCommit(event -> {
+                Polynomial polynomial = event.getRowValue();
+                String[] parts = polynomial.getPolynomial().split(",");
+
+                if (parts.length <= colIndex) {
+                    String[] newParts = new String[Math.max(colIndex + 1, 3)];
+                    System.arraycopy(parts, 0, newParts, 0, parts.length);
+                    Arrays.fill(newParts, parts.length, newParts.length, "");
+                    parts = newParts;
+                }
+
+                parts[colIndex] = event.getNewValue().trim();
+                polynomial.setPolynomial(String.join(",", parts));
+            });
+
+            column.setCellValueFactory(cellData -> {
+                Polynomial polynomial = cellData.getValue();
+                if (polynomial == null) return new SimpleStringProperty("");
+
+                String[] parts = polynomial.getPolynomial().split(",");
+                if (parts.length <= colIndex) {
+                    String[] newParts = new String[Math.max(colIndex + 1, 3)];
+                    System.arraycopy(parts, 0, newParts, 0, parts.length);
+                    Arrays.fill(newParts, parts.length, newParts.length, "");
+                    parts = newParts;
+                }
+
+                String value = parts[colIndex].trim();
+                return new SimpleStringProperty(value.isEmpty() ? "-" : value);
+            });
+
+            SumTable.getColumns().add(column);
+        }
+
+        // Add rows with specified values
+        SumTable.getItems().add(new Polynomial("1,2"));
+        SumTable.getItems().add(new Polynomial("2,3"));
+        SumTable.getItems().add(new Polynomial("1,2,3"));
+
+        makeTableEditable();
+    }
+
     public static class DecodingStep {
         private final String step;
         private final String currentBits;
