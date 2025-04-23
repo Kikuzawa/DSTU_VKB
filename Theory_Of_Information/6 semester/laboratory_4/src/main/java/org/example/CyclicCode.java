@@ -2,50 +2,74 @@ package org.example;
 
 import java.util.Arrays;
 
+/**
+ * Класс для работы с циклическими кодами
+ * Реализует операции кодирования, декодирования и исправления ошибок
+ */
 public class CyclicCode {
+    // Порождающий полином кода
     private final Polynomial generatorPolynomial;
+    // Длина кодового слова
     private final int n;
+    // Длина информационного слова
     private final int k;
+    // Порождающая матрица кода
     private final int[][] generatorMatrix;
+    // Проверочная матрица кода
     private final int[][] parityCheckMatrix;
 
+    /**
+     * Конструктор циклического кода из порождающего полинома
+     * @param generatorPolynomial порождающий полином
+     * @param n длина кодового слова
+     */
     public CyclicCode(Polynomial generatorPolynomial, int n) {
         this.generatorPolynomial = generatorPolynomial;
         this.n = n;
         this.k = n - generatorPolynomial.getDegree();
         
-        // Construct generator matrix
+        // Строим порождающую матрицу
         this.generatorMatrix = constructGeneratorMatrix();
+        // Строим проверочную матрицу
         this.parityCheckMatrix = constructParityCheckMatrix();
     }
 
+    /**
+     * Конструктор циклического кода из порождающей матрицы
+     * @param generatorMatrix порождающая матрица
+     * @throws IllegalArgumentException если матрица не соответствует циклическому коду
+     */
     public CyclicCode(int[][] generatorMatrix) {
         this.generatorMatrix = generatorMatrix;
         this.n = generatorMatrix[0].length;
         this.k = generatorMatrix.length;
         
-        // Convert generator matrix to polynomial
+        // Преобразуем порождающую матрицу в полином
         this.generatorPolynomial = matrixToPolynomial(generatorMatrix);
-        // Validate that provided generator matrix matches canonical cyclic shifts
+        // Проверяем, что матрица соответствует циклическому коду
         int[][] expectedGeneratorMatrix = constructGeneratorMatrix();
         if (!Arrays.deepEquals(expectedGeneratorMatrix, generatorMatrix)) {
-            throw new IllegalArgumentException("Invalid generator matrix: rows must be cyclic shifts of the generator polynomial");
+            throw new IllegalArgumentException("Неверная порождающая матрица: строки должны быть циклическими сдвигами порождающего полинома");
         }
         this.parityCheckMatrix = constructParityCheckMatrix();
     }
 
+    /**
+     * Строит порождающую матрицу кода
+     * @return порождающая матрица
+     */
     private int[][] constructGeneratorMatrix() {
         int[][] matrix = new int[k][n];
         int[] coeffs = generatorPolynomial.getCoefficients();
         
-        // First row is the generator polynomial coefficients padded with zeros
+        // Первая строка - коэффициенты порождающего полинома с нулями
         for (int i = 0; i < coeffs.length; i++) {
             matrix[0][i] = coeffs[i];
         }
         
-        // Subsequent rows are cyclic shifts of the first row
+        // Последующие строки - циклические сдвиги первой строки
         for (int i = 1; i < k; i++) {
-            // Shift the previous row right by one position
+            // Сдвигаем предыдущую строку вправо на одну позицию
             matrix[i][0] = matrix[i-1][n-1];
             for (int j = 1; j < n; j++) {
                 matrix[i][j] = matrix[i-1][j-1];
@@ -55,18 +79,22 @@ public class CyclicCode {
         return matrix;
     }
 
+    /**
+     * Строит проверочную матрицу кода
+     * @return проверочная матрица
+     */
     private int[][] constructParityCheckMatrix() {
         int[][] matrix = new int[n - k][n];
         int[] coeffs = generatorPolynomial.getCoefficients();
         
-        // First row is the generator polynomial coefficients in reverse order
+        // Первая строка - коэффициенты порождающего полинома в обратном порядке
         for (int i = 0; i < coeffs.length; i++) {
             matrix[0][i] = coeffs[coeffs.length - 1 - i];
         }
         
-        // Subsequent rows are cyclic shifts of the first row
+        // Последующие строки - циклические сдвиги первой строки
         for (int i = 1; i < n - k; i++) {
-            // Shift the previous row right by one position
+            // Сдвигаем предыдущую строку вправо на одну позицию
             matrix[i][0] = matrix[i-1][n-1];
             for (int j = 1; j < n; j++) {
                 matrix[i][j] = matrix[i-1][j-1];
@@ -76,6 +104,11 @@ public class CyclicCode {
         return matrix;
     }
 
+    /**
+     * Преобразует порождающую матрицу в полином
+     * @param matrix порождающая матрица
+     * @return порождающий полином
+     */
     private Polynomial matrixToPolynomial(int[][] matrix) {
         int[] coeffs = new int[matrix[0].length - matrix.length + 1];
         for (int i = 0; i < coeffs.length; i++) {
@@ -84,23 +117,29 @@ public class CyclicCode {
         return new Polynomial(coeffs);
     }
 
+    /**
+     * Кодирует информационное слово
+     * @param message информационное слово
+     * @return кодовое слово
+     * @throws IllegalArgumentException если длина сообщения не равна k
+     */
     public int[] encode(int[] message) {
         if (message.length != k) {
-            throw new IllegalArgumentException("Message length must be equal to k");
+            throw new IllegalArgumentException("Длина сообщения должна быть равна k");
         }
 
-        // Convert message to polynomial
+        // Преобразуем сообщение в полином
         Polynomial messagePoly = new Polynomial(message);
         
-        // Multiply by x^(n-k)
+        // Умножаем на x^(n-k)
         int[] shifted = new int[n];
         System.arraycopy(message, 0, shifted, n - k, k);
         Polynomial shiftedPoly = new Polynomial(shifted);
         
-        // Calculate remainder
+        // Вычисляем остаток
         Polynomial remainder = shiftedPoly.mod(generatorPolynomial);
         
-        // Construct codeword
+        // Строим кодовое слово
         int[] codeword = new int[n];
         System.arraycopy(message, 0, codeword, 0, k);
         int[] remainderCoeffs = remainder.getCoefficients();
@@ -109,42 +148,53 @@ public class CyclicCode {
         return codeword;
     }
 
+    /**
+     * Декодирует кодовое слово
+     * @param received принятое слово
+     * @return декодированное сообщение
+     * @throws IllegalArgumentException если длина принятого слова не равна n
+     */
     public int[] decode(int[] received) {
         if (received.length != n) {
-            throw new IllegalArgumentException("Received word length must be equal to n");
+            throw new IllegalArgumentException("Длина принятого слова должна быть равна n");
         }
 
-        // Calculate syndrome
+        // Вычисляем синдром
         Polynomial receivedPoly = new Polynomial(received);
         Polynomial syndrome = receivedPoly.mod(generatorPolynomial);
         
-        // Find error pattern
+        // Находим паттерн ошибки
         int[] errorPattern = findErrorPattern(syndrome);
         
-        // Correct errors
+        // Исправляем ошибки
         int[] corrected = new int[n];
         for (int i = 0; i < n; i++) {
             corrected[i] = received[i] ^ errorPattern[i];
         }
         
-        // Extract message
+        // Извлекаем сообщение
         int[] message = new int[k];
         System.arraycopy(corrected, 0, message, 0, k);
         
         return message;
     }
 
+    /**
+     * Находит паттерн ошибки по синдрому
+     * @param syndrome синдром ошибки
+     * @return паттерн ошибки
+     */
     private int[] findErrorPattern(Polynomial syndrome) {
-        // This is a simplified version. In a real implementation,
-        // you would use a more sophisticated error pattern finding algorithm
+        // Упрощенная версия. В реальной реализации
+        // используется более сложный алгоритм поиска паттерна ошибки
         int[] errorPattern = new int[n];
         int[] syndromeCoeffs = syndrome.getCoefficients();
         
         if (syndromeCoeffs.length == 0) {
-            return errorPattern; // No errors
+            return errorPattern; // Ошибок нет
         }
         
-        // For simplicity, assume single error
+        // Для простоты предполагаем одиночную ошибку
         for (int i = 0; i < n; i++) {
             int[] testPattern = new int[n];
             testPattern[i] = 1;
@@ -158,32 +208,58 @@ public class CyclicCode {
         return errorPattern;
     }
 
+    /**
+     * Получает порождающий полином
+     * @return порождающий полином
+     */
     public Polynomial getGeneratorPolynomial() {
         return generatorPolynomial;
     }
 
+    /**
+     * Получает порождающую матрицу
+     * @return порождающая матрица
+     */
     public int[][] getGeneratorMatrix() {
         return generatorMatrix;
     }
 
+    /**
+     * Получает проверочную матрицу
+     * @return проверочная матрица
+     */
     public int[][] getParityCheckMatrix() {
         return parityCheckMatrix;
     }
 
+    /**
+     * Получает длину кодового слова
+     * @return длина кодового слова
+     */
     public int getN() {
         return n;
     }
 
+    /**
+     * Получает длину информационного слова
+     * @return длина информационного слова
+     */
     public int getK() {
         return k;
     }
 
+    /**
+     * Вычисляет синдром принятого слова
+     * @param receivedWord принятое слово
+     * @return синдром
+     * @throws IllegalArgumentException если длина принятого слова не равна n
+     */
     public int[] calculateSyndrome(int[] receivedWord) {
         if (receivedWord.length != n) {
-            throw new IllegalArgumentException("Received word length must be " + n);
+            throw new IllegalArgumentException("Длина принятого слова должна быть равна " + n);
         }
         
-        // Calculate syndrome by multiplying received word with parity check matrix
+        // Вычисляем синдром умножением принятого слова на проверочную матрицу
         int[] syndrome = new int[n - k];
         for (int i = 0; i < n - k; i++) {
             for (int j = 0; j < n; j++) {
@@ -194,6 +270,10 @@ public class CyclicCode {
         return syndrome;
     }
 
+    /**
+     * Получает проверочный полином
+     * @return проверочный полином
+     */
     public Polynomial getParityCheckPolynomial() {
         // Создаем полином x^n - 1
         int[] xnCoeffs = new int[n + 1];
