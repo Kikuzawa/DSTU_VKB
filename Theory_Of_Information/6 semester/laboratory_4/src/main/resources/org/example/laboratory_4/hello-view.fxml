@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.HelloController"
+      spacing="10"
+      padding="10">
+
+    <HBox spacing="10">
+        <VBox spacing="5">
+            <Label text="Input Type:"/>
+            <ToggleGroup fx:id="inputTypeGroup"/>
+            <RadioButton text="Polynomial" toggleGroup="$inputTypeGroup" selected="true"/>
+            <RadioButton text="Matrix" toggleGroup="$inputTypeGroup"/>
+        </VBox>
+
+        <VBox spacing="5" fx:id="polynomialInput">
+            <Label text="Polynomial:"/>
+            <TextField fx:id="polynomialField"/>
+            <Label text="n:"/>
+            <TextField fx:id="nField"/>
+        </VBox>
+
+        <VBox spacing="5" fx:id="matrixInput" visible="false">
+            <Label text="Generator Matrix:"/>
+            <TableView fx:id="generatorMatrixTable">
+                <columns>
+                    <TableColumn fx:id="matrixColumn0" text="0"/>
+                    <TableColumn fx:id="matrixColumn1" text="1"/>
+                    <TableColumn fx:id="matrixColumn2" text="2"/>
+                    <TableColumn fx:id="matrixColumn3" text="3"/>
+                </columns>
+            </TableView>
+            <HBox spacing="5">
+                <Button text="Add Row" onAction="#onAddRowButtonClick"/>
+                <Button text="Remove Row" onAction="#onRemoveRowButtonClick"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10">
+        <VBox spacing="5">
+            <Label text="Input Message:"/>
+            <TextArea fx:id="inputMessage" prefRowCount="5" prefColumnCount="40"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Output Message:"/>
+            <TextArea fx:id="outputMessage" prefRowCount="5" prefColumnCount="40" editable="false"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10">
+        <Button text="Initialize" onAction="#onInitializeButtonClick"/>
+        <Button text="Encode" onAction="#onEncodeButtonClick"/>
+        <Button text="Decode" onAction="#onDecodeButtonClick"/>
+        <Button text="Load File" onAction="#onLoadFileButtonClick"/>
+        <CheckBox fx:id="blockProcessingCheckBox" text="Обработка блоками"/>
+    </HBox>
+
+    <TitledPane text="Process Log" expanded="true">
+        <TextArea fx:id="processLog" prefRowCount="10" prefColumnCount="40" editable="false"/>
+    </TitledPane>
+
+    <TitledPane text="Generator Matrix" expanded="false">
+        <TableView fx:id="generatorMatrixDisplay">
+            <columns>
+                <TableColumn fx:id="genMatrixColumn0" text="0"/>
+                <TableColumn fx:id="genMatrixColumn1" text="1"/>
+                <TableColumn fx:id="genMatrixColumn2" text="2"/>
+                <TableColumn fx:id="genMatrixColumn3" text="3"/>
+            </columns>
+        </TableView>
+    </TitledPane>
+
+    <TitledPane text="Parity Check Matrix" expanded="false">
+        <TableView fx:id="parityCheckMatrixDisplay">
+            <columns>
+                <TableColumn fx:id="parityMatrixColumn0" text="0"/>
+                <TableColumn fx:id="parityMatrixColumn1" text="1"/>
+                <TableColumn fx:id="parityMatrixColumn2" text="2"/>
+                <TableColumn fx:id="parityMatrixColumn3" text="3"/>
+            </columns>
+        </TableView>
+    </TitledPane>
+
+</VBox>
