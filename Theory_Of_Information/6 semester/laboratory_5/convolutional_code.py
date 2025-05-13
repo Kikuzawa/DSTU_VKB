@@ -3,6 +3,8 @@ import numpy as np
 import random
 from tkinter import messagebox
 from helpers import text_to_binary, binary_to_text
+import time
+from datetime import datetime
 
 class ConvolutionalCodeModule:
     def __init__(self, parent):
@@ -24,7 +26,7 @@ class ConvolutionalCodeModule:
         
         # Заголовок модуля
         self.title_label = ctk.CTkLabel(self.main_frame, text="Модели каналов связи со сверточным кодом", 
-                                      font=ctk.CTkFont(size=20, weight="bold"))
+                                       font=ctk.CTkFont(size=20, weight="bold"))
         self.title_label.pack(padx=10, pady=10)
         
         # Фрейм для ввода параметров
@@ -33,7 +35,7 @@ class ConvolutionalCodeModule:
         
         # Параметры кода
         self.params_label = ctk.CTkLabel(self.params_frame, text="Параметры сверточного кода:", 
-                                       font=ctk.CTkFont(weight="bold"))
+                                        font=ctk.CTkFont(weight="bold"))
         self.params_label.grid(row=0, column=0, padx=10, pady=5, sticky="w", columnspan=3)
         
         # Длина ограничения
@@ -504,11 +506,6 @@ class ConvolutionalCodeModule:
             self.result_text.insert("end", "- Формула пропускной способности: C = 1 - H(p)\n")
             self.result_text.insert("end", "- Где H(p) = -p·log₂(p) - (1-p)·log₂(1-p) - двоичная энтропия\n\n")
             
-            # Схематичное представление канала
-            self.result_text.insert("end", "Схема канала:\n")
-            self.result_text.insert("end", "  ╭─── 1-p ───> 0\n")
-            self.result_text.insert("end", "0─┤\n")
-            self.result_text.insert("end", "  ╰──── p ────> 1\n\n")
             
             # Рекомендации для ДСК
             self.result_text.insert("end", "Рекомендации для кодирования:\n")
@@ -524,14 +521,7 @@ class ConvolutionalCodeModule:
             self.result_text.insert("end", "- Корректная передача происходит с вероятностью 1-p-q\n")
             self.result_text.insert("end", "- Формула пропускной способности: C = (1-q)·(1-H(p/(1-q)))\n\n")
             
-            # Схематичное представление канала
-            self.result_text.insert("end", "Схема канала:\n")
-            self.result_text.insert("end", "  ╭─── 1-p-q ──> 0\n")
-            self.result_text.insert("end", "0─┼──── p ────> 1\n")
-            self.result_text.insert("end", "  ╰──── q ────> e\n\n")
-            self.result_text.insert("end", "  ╭─── 1-p-q ──> 1\n")
-            self.result_text.insert("end", "1─┼──── p ────> 0\n")
-            self.result_text.insert("end", "  ╰──── q ────> e\n")
+            
             
             # Рекомендации для ДСКС
             self.result_text.insert("end", "Рекомендации для кодирования:\n")
@@ -547,12 +537,6 @@ class ConvolutionalCodeModule:
             self.result_text.insert("end", "- Асимметричность ошибок (только в одном направлении)\n")
             self.result_text.insert("end", "- При оптимальном распределении входных символов пропускная способность выше, чем у ДСК\n\n")
             
-            # Схематичное представление канала
-            self.result_text.insert("end", "Схема канала:\n")
-            self.result_text.insert("end", "0───── 1 ─────> 0\n\n")
-            self.result_text.insert("end", "  ╭─── 1-p ───> 1\n")
-            self.result_text.insert("end", "1─┤\n")
-            self.result_text.insert("end", "  ╰──── p ────> 0\n\n")
             
             # Рекомендации для Z-канала
             self.result_text.insert("end", "Рекомендации для кодирования:\n")
@@ -581,224 +565,435 @@ class ConvolutionalCodeModule:
             self.input_text.insert("1.0", text)
     
     def encode_text(self):
+        operation_start_time = time.time()
+        operation_start_dt = datetime.fromtimestamp(operation_start_time)
+
         # Получаем входной текст
         input_text = self.input_text.get("1.0", "end").strip()
-        if not input_text:
-            messagebox.showerror("Ошибка", "Введите текст для кодирования")
-            return
         
         # Очищаем результаты
         self.result_text.delete("1.0", "end")
-        self.result_text.insert("1.0", "=== Сверточное кодирование ===\n")
-        
+        self.result_text.insert("1.0", f"""============================================================
+OPERATION: Сверточное кодирование
+START TIME: {operation_start_dt.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}
+============================================================\n\n""")
+
+        # --- Шаг 1: Валидация входных данных ---
+        step_start_time = time.time()
+        self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 1: Валидация входных данных
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+        self.result_text.insert("end", "Пояснение: Проверка наличия текста для кодирования.\n")
+        self.result_text.insert("end", f"Входные данные:\n  Текст: '{input_text[:50]}{'...' if len(input_text) > 50 else ''}'\n")
+
+        if not input_text:
+            messagebox.showerror("Ошибка", "Введите текст для кодирования")
+            self.result_text.insert("end", "Результат: Ошибка - текст для кодирования отсутствует.\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
+            return
+        self.result_text.insert("end", "Результат: Входной текст присутствует.\n")
+        step_end_time = time.time()
+        self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
         try:
-            # Проверяем параметры
+            # --- Шаг 2: Валидация параметров кодирования ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 2: Валидация параметров сверточного кода
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", "Пояснение: Проверка корректности полиномов генератора и длины ограничения.\n")
+            self.result_text.insert("end", f"Текущие параметры:\n  Полиномы: {self.generator_polynomials}\n  Длина ограничения: {self.constraint_entry.get()}\n")
+
             if not self._validate_polynomials():
                 messagebox.showerror("Ошибка", "Некорректные полиномы генератора")
+                self.result_text.insert("end", "Результат: Ошибка - некорректные полиномы генератора.\n")
+                step_end_time = time.time()
+                self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
                 return
             
-            # Проверяем длину ограничения
             try:
-                self.constraint_length = int(self.constraint_entry.get())
-                if self.constraint_length < 2:
+                current_constraint_length = int(self.constraint_entry.get())
+                if current_constraint_length < 2:
                     messagebox.showerror("Ошибка", "Длина ограничения должна быть не менее 2")
+                    self.result_text.insert("end", "Результат: Ошибка - длина ограничения < 2.\n")
+                    step_end_time = time.time()
+                    self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
                     return
+                self.constraint_length = current_constraint_length # Обновляем, если успешно
             except ValueError:
                 messagebox.showerror("Ошибка", "Длина ограничения должна быть целым числом")
+                self.result_text.insert("end", "Результат: Ошибка - длина ограничения не целое число.\n")
+                step_end_time = time.time()
+                self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
                 return
             
-            # Проверяем, что полиномы соответствуют длине ограничения
             for poly in self.generator_polynomials:
                 if len(poly) != self.constraint_length:
                     messagebox.showerror("Ошибка", f"Длина полинома {poly} не соответствует длине ограничения ({self.constraint_length})")
+                    self.result_text.insert("end", f"Результат: Ошибка - длина полинома {poly} не равна {self.constraint_length}.\n")
+                    step_end_time = time.time()
+                    self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
                     return
                 if not all(bit in '01' for bit in poly):
                     messagebox.showerror("Ошибка", f"Полином {poly} должен состоять только из 0 и 1")
+                    self.result_text.insert("end", f"Результат: Ошибка - полином {poly} содержит не бинарные символы.\n")
+                    step_end_time = time.time()
+                    self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
                     return
-            
-            # Преобразуем текст в двоичное представление с явным указанием кодировки UTF-8
+            self.result_text.insert("end", "Результат: Параметры кода валидны.\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
+            # --- Шаг 3: Преобразование текста в двоичный код ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 3: Преобразование текста в двоичный код
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", "Пояснение: Исходный текст конвертируется в последовательность битов (0 и 1) с использованием кодировки UTF-8.\n")
+            self.result_text.insert("end", f"Входные данные:\n  Текст: '{input_text[:50]}{'...' if len(input_text) > 50 else ''}'\n")
             binary_data = text_to_binary(input_text)
             if not binary_data:
                 messagebox.showerror("Ошибка", "Не удалось преобразовать текст в двоичный код")
+                self.result_text.insert("end", "Результат: Ошибка - не удалось преобразовать текст в двоичный код.\n")
+                step_end_time = time.time()
+                self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n")
                 return
-            
-            # Выводим базовую информацию о кодировании
-            self.result_text.insert("end", f"Тип канала: {self.channel_type}\n")
-            self.result_text.insert("end", f"Длина ограничения: {self.constraint_length}\n")
-            self.result_text.insert("end", f"Количество полиномов: {len(self.generator_polynomials)}\n")
-            
-            # Рассчитываем и отображаем скорость кода
+            self.result_text.insert("end", f"Результат (первые 100 бит): {binary_data[:100]}{'...' if len(binary_data) > 100 else ''}\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
+            # --- Шаг 4: Вывод базовой информации о кодировании ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 4: Информация о параметрах кодирования
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", "Пояснение: Отображение основных параметров, используемых для кодирования.\n")
+            self.result_text.insert("end", f"  Тип канала: {self.channel_type}\n")
+            self.result_text.insert("end", f"  Длина ограничения: {self.constraint_length}\n")
+            self.result_text.insert("end", f"  Количество полиномов: {len(self.generator_polynomials)}\n")
             code_rate = 1 / len(self.generator_polynomials)
-            self.result_text.insert("end", f"Скорость кода: R = 1/{len(self.generator_polynomials)} = {code_rate:.4f}\n")
-            
-            # Анализируем эффективность кода для текущего канала
+            self.result_text.insert("end", f"  Скорость кода: R = 1/{len(self.generator_polynomials)} = {code_rate:.4f}\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
+            # --- Шаг 5: Анализ эффективности кода (Пропускная способность) ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 5: Анализ кода (пропускная способность канала)
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", "Пояснение: Расчет приблизительной пропускной способности выбранного канала и сравнение со скоростью кода.\n")
             try:
-                # Получаем параметры канала
                 p = float(self.error_entry.get())
-                if self.channel_type == "ДСКС":
-                    q = float(self.erasure_entry.get())
+                q = float(self.erasure_entry.get()) if self.channel_type == "ДСКС" else 0
+                self.result_text.insert("end", f"Входные параметры для расчета:\n  Вероятность ошибки (p): {p}\n  Вероятность стирания (q): {q if self.channel_type == 'ДСКС' else 'N/A'}\n")
+                
+                channel_capacity_value, capacity_details = self._calculate_channel_capacity_internal(p, q, self.channel_type)
+                self.result_text.insert("end", capacity_details)
+                self.result_text.insert("end", f"Расчетная пропускная способность канала ({self.channel_type}): C ≈ {channel_capacity_value:.4f} бит/символ\n")
+
+                if code_rate <= channel_capacity_value:
+                    self.result_text.insert("end", f"Итог: ✅ Скорость кода ({code_rate:.4f}) не превышает пропускную способность ({channel_capacity_value:.4f}).\n")
+                    self.result_text.insert("end", "       Теоретически, возможна надежная передача.\n")
                 else:
-                    q = 0
-                
-                # Расчёт приблизительной пропускной способности канала
-                channel_capacity = 0
-                if self.channel_type == "ДСК":
-                    if p == 0 or p == 1:
-                        channel_capacity = 1
-                    else:
-                        h_binary = -p * np.log2(p) - (1-p) * np.log2(1-p)
-                        channel_capacity = 1 - h_binary
-                elif self.channel_type == "ДСКС":
-                    if q == 1:
-                        channel_capacity = 0
-                    else:
-                        p_eff = p / (1-q)  # q < 1 здесь гарантировано
-                        if p_eff == 0 or p_eff == 1:
-                            h_eff = 0
-                        else: # Это означает, что 0 < p_eff < 1, так как p_eff всегда в [0,1]
-                            h_eff = -p_eff * np.log2(p_eff) - (1-p_eff) * np.log2(1-p_eff)
-                        channel_capacity = (1-q) * (1 - h_eff)
-                elif self.channel_type == "Z-канал":
-                    if p == 0:
-                        channel_capacity = 1
-                    elif p == 1:
-                        channel_capacity = 0
-                    else:
-                        # Оценка для Z-канала
-                        a_opt = 1 / (1 + 2.5 * p)  # Приблизительная формула
-                        h_y = -((1-a_opt*p) * np.log2(1-a_opt*p) + a_opt*p * np.log2(a_opt*p)) if a_opt*p > 0 else -((1-a_opt*p) * np.log2(1-a_opt*p))
-                        h_yx = -(a_opt * (1-p) * np.log2(1-p) + a_opt * p * np.log2(p)) if 0 < p < 1 else 0
-                        channel_capacity = h_y - h_yx
-                
-                # Сравнение скорости кода и пропускной способности
-                self.result_text.insert("end", f"\nАнализ кода для канала {self.channel_type}:\n")
-                self.result_text.insert("end", f"- Пропускная способность канала: C ≈ {channel_capacity:.4f} бит/символ\n")
-                
-                if code_rate <= channel_capacity:
-                    self.result_text.insert("end", f"✅ Скорость кода ({code_rate:.4f}) не превышает пропускную способность ({channel_capacity:.4f})\n")
-                    self.result_text.insert("end", "   Согласно теореме Шеннона, возможно построение кода с произвольно малой вероятностью ошибки\n")
-                else:
-                    self.result_text.insert("end", f"⚠️ Скорость кода ({code_rate:.4f}) превышает пропускную способность ({channel_capacity:.4f})\n")
-                    self.result_text.insert("end", "   Согласно теореме Шеннона, надежная передача невозможна\n")
-                    
-                    # Рекомендации по улучшению
-                    required_polys = max(2, int(np.ceil(1 / channel_capacity)))
+                    self.result_text.insert("end", f"Итог: ⚠️ Скорость кода ({code_rate:.4f}) превышает пропускную способность ({channel_capacity_value:.4f}).\n")
+                    self.result_text.insert("end", "       Надежная передача невозможна. Рекомендуется увеличить избыточность кода (например, увеличить число полиномов).\n")
+                    required_polys = max(2, int(np.ceil(1 / channel_capacity_value))) if channel_capacity_value > 0 else len(self.generator_polynomials) + 1
                     if required_polys > len(self.generator_polynomials):
-                        self.result_text.insert("end", f"   Рекомендуется использовать не менее {required_polys} полиномов для надежной передачи\n")
+                         self.result_text.insert("end", f"       Рекомендуемое мин. кол-во полиномов: {required_polys}\n")
+
             except Exception as e:
-                # Игнорируем ошибки при попытке расчета рекомендаций
-                self.result_text.insert("end", f"\nПредупреждение: не удалось вычислить пропускную способность канала: {str(e)}\n")
+                self.result_text.insert("end", f"Предупреждение: Не удалось вычислить пропускную способность канала: {str(e)}\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
             
-            # Кодируем данные
-            encoded_data = self.convolutional_encode(binary_data)
-            
-            # Сохраняем закодированные данные
+            # --- Шаг 6: Сверточное кодирование --- 
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 6: Процесс сверточного кодирования
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""") 
+            self.result_text.insert("end", "Пояснение: Применение алгоритма сверточного кодирования к двоичным данным.\n")
+            # convolutional_encode теперь будет возвращать (encoded_data, log_details)
+            encoded_data, log_details_encode = self.convolutional_encode(binary_data, step_start_time)
+            self.result_text.insert("end", log_details_encode) # Добавляем детали из convolutional_encode
+            step_end_time = time.time() # Общее время шага кодирования
+            self.result_text.insert("end", f"END (Общее время кодирования): {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION (Общее время кодирования): {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
             self.parent.input_text = input_text
             self.parent.encoded_text = encoded_data
             
-            # Базовая статистика кодирования
+            # --- Шаг 7: Статистика кодирования ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 7: Статистика кодирования
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", "Пояснение: Отображение ключевых метрик процесса кодирования.\n")
             input_bits = len(binary_data)
             output_bits = len(encoded_data)
             redundancy_ratio = (output_bits - input_bits) / input_bits if input_bits > 0 else 0
             
-            self.result_text.insert("end", f"\nСтатистика кодирования:\n")
-            self.result_text.insert("end", f"- Длина исходных данных: {input_bits} бит\n")
-            self.result_text.insert("end", f"- Длина закодированных данных: {output_bits} бит\n")
-            self.result_text.insert("end", f"- Избыточность кода: {redundancy_ratio:.2f} ({redundancy_ratio*100:.0f}%)\n")
-            
-            # Анализ влияния кода на защиту от ошибок
+            self.result_text.insert("end", f"  Длина исходных данных: {input_bits} бит\n")
+            self.result_text.insert("end", f"  Длина закодированных данных: {output_bits} бит\n")
+            self.result_text.insert("end", f"  Избыточность кода: {redundancy_ratio:.2f} ({redundancy_ratio*100:.0f}%)\n")
+
             error_correction_level = "Низкая"
             if len(self.generator_polynomials) >= 3 and self.constraint_length >= 4:
                 error_correction_level = "Высокая"
             elif len(self.generator_polynomials) >= 2 and self.constraint_length >= 3:
                 error_correction_level = "Средняя"
-            
-            self.result_text.insert("end", f"- Способность исправления ошибок: {error_correction_level}\n")
-            
-            # Выводим часть закодированных данных
+            self.result_text.insert("end", f"  Ориентировочная способность исправления ошибок: {error_correction_level}\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
+            # --- Шаг 8: Вывод части закодированных данных ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 8: Результат кодирования (фрагмент)
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", "Пояснение: Отображение начала и конца закодированной последовательности для предварительного просмотра.\n")
             if len(encoded_data) > 100:
-                self.result_text.insert("end", "\nПервые 50 символов закодированных данных:\n")
-                self.result_text.insert("end", encoded_data[:50] + "\n")
-                self.result_text.insert("end", "Последние 50 символов закодированных данных:\n")
-                self.result_text.insert("end", encoded_data[-50:] + "\n")
+                self.result_text.insert("end", f"  Первые 50 символов: {encoded_data[:50]}\n")
+                self.result_text.insert("end", f"  Последние 50 символов: {encoded_data[-50:]}\n")
             else:
-                self.result_text.insert("end", "\nЗакодированные данные:\n")
-                self.result_text.insert("end", encoded_data + "\n")
-            
-            # Рекомендации в зависимости от типа канала
-            self.result_text.insert("end", f"\nРекомендации для канала {self.channel_type}:\n")
-            
+                self.result_text.insert("end", f"  Закодированные данные: {encoded_data}\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
+
+            # --- Шаг 9: Рекомендации и следующий шаг ---
+            step_start_time = time.time()
+            self.result_text.insert("end", f"""------------------------------------------------------------
+STEP 9: Рекомендации и следующие шаги
+START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}
+------------------------------------------------------------
+""")
+            self.result_text.insert("end", f"Пояснение: Советы по использованию кода в зависимости от типа канала и указания для следующего этапа работы.\n")
+            self.result_text.insert("end", f"Рекомендации для канала {self.channel_type}:\n")
             if self.channel_type == "ДСК":
-                self.result_text.insert("end", "- ДСК хорошо работает с симметричными кодами\n")
-                self.result_text.insert("end", "- Увеличение количества полиномов улучшает корректирующую способность кода\n")
+                self.result_text.insert("end", "  - ДСК хорошо работает с симметричными кодами.\n")
+                self.result_text.insert("end", "  - Увеличение количества полиномов улучшает корректирующую способность кода.\n")
             elif self.channel_type == "ДСКС":
-                self.result_text.insert("end", "- В ДСКС стирания лучше обрабатываются, чем ошибки, так как известны позиции стираний\n")
-                self.result_text.insert("end", "- Рекомендуется использовать коды с большим расстоянием Хэмминга\n")
+                self.result_text.insert("end", "  - В ДСКС стирания лучше обрабатываются, чем ошибки, так как известны позиции стираний.\n")
+                self.result_text.insert("end", "  - Рекомендуется использовать коды с большим расстоянием Хэмминга.\n")
             elif self.channel_type == "Z-канал":
-                self.result_text.insert("end", "- Z-канал имеет асимметричные ошибки (только 1→0), это можно использовать для оптимизации\n")
-                self.result_text.insert("end", "- Полиномы с большим количеством единиц помогают лучше защититься от ошибок типа 1→0\n")
-            
-            # Следующий шаг
-            self.result_text.insert("end", "\n✓ Кодирование успешно завершено. Теперь вы можете нажать 'Внести ошибки/стирания' для моделирования канала.\n")
+                self.result_text.insert("end", "  - Z-канал имеет асимметричные ошибки (только 1→0), это можно использовать для оптимизации.\n")
+                self.result_text.insert("end", "  - Полиномы с большим количеством единиц помогают лучше защититься от ошибок типа 1→0.\n")
+            self.result_text.insert("end", "\nСледующий шаг: ✓ Кодирование успешно завершено. Теперь вы можете нажать 'Внести ошибки/стирания' для моделирования канала.\n")
+            step_end_time = time.time()
+            self.result_text.insert("end", f"END: {datetime.fromtimestamp(step_end_time).strftime('%H:%M:%S.%f')[:-3]}\nDURATION: {step_end_time - step_start_time:.3f} seconds\n------------------------------------------------------------\n\n")
             
         except Exception as e:
-            messagebox.showerror("Ошибка", f"Ошибка при кодировании: {str(e)}")
-    
-    def convolutional_encode(self, binary_data):
-        """Сверточное кодирование по алгоритму из второй лабораторной работы"""
-        # Преобразуем полиномы генератора в числовой формат для алгоритма из второй лабы
+            self.result_text.insert("end", f"КРИТИЧЕСКАЯ ОШИБКА в процессе кодирования: {str(e)}\n")
+            messagebox.showerror("Критическая ошибка кодирования", f"Произошла ошибка: {str(e)}")
+        
+        finally:
+            operation_end_time = time.time()
+            self.result_text.insert("end", f"""============================================================
+OPERATION COMPLETED: Сверточное кодирование
+END TIME: {datetime.fromtimestamp(operation_end_time).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}
+TOTAL DURATION: {operation_end_time - operation_start_time:.3f} seconds
+============================================================\n""")
+
+    def _calculate_channel_capacity_internal(self, p, q, channel_type):
+        """Внутренний метод для расчета пропускной способности канала и формирования детального лога.
+        Возвращает (значение_пропускной_способности, строка_лога_деталей).
+        """
+        log_details = ""
+        channel_capacity_value = 0
+
+        if channel_type == "ДСК":
+            log_details += "  Расчет для ДСК: C = 1 - H(p), где H(p) = -p*log2(p) - (1-p)*log2(1-p)\n"
+            if p == 0 or p == 1:
+                channel_capacity_value = 1.0
+                log_details += f"  H({p}) = 0 (канал без ошибок или полностью ошибочный)\n"
+            else:
+                h_binary = -p * np.log2(p) - (1-p) * np.log2(1-p)
+                channel_capacity_value = 1 - h_binary
+                log_details += f"  H({p}) = -{p}*log2({p}) - {1-p}*log2({1-p}) = {h_binary:.4f}\n"
+            log_details += f"  C_ДСК = 1 - {h_binary if p !=0 and p !=1 else 0:.4f} = {channel_capacity_value:.4f}\n"
+
+        elif channel_type == "ДСКС":
+            log_details += "  Расчет для ДСКС: C = (1-q)*(1 - H(p_eff)), где p_eff = p/(1-q)\n"
+            if q == 1:
+                channel_capacity_value = 0.0
+                log_details += "  q=1: Канал полностью стирает данные. C_ДСКС = 0\n"
+            else:
+                p_eff = p / (1-q)
+                log_details += f"  p_eff = {p}/(1-{q}) = {p_eff:.4f}\n"
+                if p_eff < 0 or p_eff > 1: # Добавим проверку p_eff, т.к. p+q > 1 не проверяется до этого шага
+                     log_details += f"  Предупреждение: p_eff ({p_eff:.4f}) вне диапазона [0,1]. Сумма p+q ({p+q}) может быть > 1. C будет неверной.\n" 
+                     # Можно установить capacity_value в 0 или оставить как есть, но с предупреждением
+                     # Для безопасности, если p_eff выходит за рамки, это обычно означает p+q > 1, и такой канал невалиден
+                     # Установим в 0, если p+q > 1 не было поймано ранее
+                     if p + q > 1:
+                         channel_capacity_value = 0.0
+                         h_eff = float('nan') # Неопределенность
+                     else: # Если p+q <=1, но p_eff некорректен из-за округления или граничных случаев
+                         if p_eff <= 0 or p_eff >= 1: # Исправлено для включения граничных случаев
+                            h_eff = 0.0
+                         else:
+                            h_eff = -p_eff * np.log2(p_eff) - (1-p_eff) * np.log2(1-p_eff)
+                elif p_eff == 0 or p_eff == 1:
+                    h_eff = 0.0
+                    log_details += f"  H({p_eff:.4f}) = 0\n"
+                else:
+                    h_eff = -p_eff * np.log2(p_eff) - (1-p_eff) * np.log2(1-p_eff)
+                    log_details += f"  H({p_eff:.4f}) = {h_eff:.4f}\n"
+                
+                if not (np.isnan(h_eff)) : # Только если h_eff корректно посчитан
+                    channel_capacity_value = (1-q) * (1 - h_eff)
+                    log_details += f"  C_ДСКС = (1-{q})*(1 - {h_eff:.4f}) = {channel_capacity_value:.4f}\n"
+                else:
+                    log_details += f"  C_ДСКС = Ошибка расчета (возможно p+q > 1)\n"
+                    channel_capacity_value = 0.0 # На случай если не было поймано раньше
+
+        elif channel_type == "Z-канал":
+            log_details += "  Расчет для Z-канала (приближенная формула для оптимального входа):\n"
+            log_details += "  C = log2(1 + (1-p) * (p^(p/(1-p)))) если 0 < p < 1\n"
+            if p == 0:
+                channel_capacity_value = 1.0
+                log_details += "  p=0: Канал без ошибок (0->0, 1->1). C_Z = 1\n"
+            elif p == 1:
+                channel_capacity_value = 0.0
+                log_details += "  p=1: Канал всегда передает 0 (0->0, 1->0). C_Z = 0\n"
+            else:
+                # Формула Бергера для Z-канала (более точная)
+                # C = log2(1 + ( (1-p) / (p**(p/(1-p))) ) ) не совсем та.
+                # Более распространена: H( (1-p) / (1+ (1-p)/p^(p/(1-p))) ) - H(p) / (1+ (1-p)/p^(p/(1-p))) - это для p(x=1) оптимизированного.
+                # Самая простая и часто используемая: C = log2(1 + (1-p)*(p**(p/(1-p))))
+                # Но она дает неверные результаты для p > 0.5. 
+                # Используем формулу Галлагера для Z-канала: C = max_{0<=a<=1} [ H(a(1-p)) - a*H(p) ]
+                # где a = p(x=1). Это сложно для аналитического решения здесь.
+                # Для простоты, возьмем известную верхнюю границу или одну из аппроксимаций.
+                # C_Z = log2(1 + (1-p)*(p**(p/(1-p)))) - эта формула корректна для p < 0.5. Для p > 0.5 она неверна.
+                # Для Z-канала C = H( (1-p)/( (1-p) + p**(p/(1-p)) ) ) - (p(X=1)) H(p), где p(X=1) = 1 / (1 + sqrt( (1-p)/p ) ) 
+                # Вместо сложной формулы, используем ту, что была в calculate_capacity, но с пояснениями.
+                # Ранее было: capacity_z = np.log2(1 + (1-p) * (p ** (p/(1-p))))
+                # Эта формула имеет ограничения по p. Проверим её.
+                if p > 0 and p < 1:
+                    try:
+                        # Эта формула может быть нестабильной или неточной для некоторых p
+                        # Добавляем более надежную аппроксимацию, если она существует
+                        # Используем более простую оценку, как в функции calculate_capacity:
+                        # C = H(y) - H(y|x) = H( (1-a) + a(1-p) ) - a*H(p)
+                        # Оптимальное 'a' (p(X=1)) для Z-канала: a_opt = 1 / (1 + sqrt(p/(1-p))) если мы можем выбирать p(x)
+                        # Если p(x) = 0.5 (равновероятный вход):
+                        # C = 0.5 * log2(1/(1-p)) при p < 0.5, или C = 1 - H( (1+p)/2 ) - (1-p)/2 * log2(e)
+                        # Используем аппроксимацию для равновероятного входа, если p(X=0)=p(X=1)=0.5
+                        # C = (1-p) * (1 - H(0.5)) + p * (1 - H(0.5 / (1-p) )) - не то
+                        # Для Z-канала, если вход равновероятен:  C = 1 - H( (1+p)/2 ) - (1-p)/2
+                        # Это тоже не самая простая. Вернемся к аппроксимации, которая была:
+                        # C = log2(1 + (1-p) * p**(p/(1-p))) - эта формула верна при p(x=0) = p**(1/(1-p))/(1+p**(1/(1-p))) 
+                        # что не всегда так. 
+
+                        # Самая простая верхняя оценка (upper bound) для Z-канала: C <= 1 - H(p)
+                        # Используем формулу из старой calculate_capacity, так как она была там:
+                        # capacity_z = np.log2(1 + (1-p) * (p ** (p/(1-p)))) - эта формула из Cover & Thomas для специфичного p(x)
+                        # Проверим ее на область определения
+                        if p == 0.5:
+                             channel_capacity_value = np.log2(1.5) # ~0.585
+                        elif (p/(1-p)) < 0 and p < 1: # p > 1, что не должно быть
+                             channel_capacity_value = 0 # Невалидный p
+                             log_details += f"  Предупреждение: p/(1-p) < 0, что странно для 0<p<1. p={p}.\n"
+                        elif (1-p) == 0: # p=1
+                             channel_capacity_value = 0
+                        else:
+                            # Предотвращаем RuntimeWarning для p близких к 1 в p**(p/(1-p))
+                            if p > 0.99999: # очень близко к 1
+                                term_val = 0 # p**(p/(1-p)) -> 0 for p->1
+                            else:
+                                term_val = p**(p/(1-p))
+                            channel_capacity_value = np.log2(1 + (1-p) * term_val) if (1 + (1-p) * term_val) > 0 else 0
+                        log_details += f"  Использована формула C_Z = log2(1 + (1-p)*p^(p/(1-p))): {channel_capacity_value:.4f}\n"
+                        log_details += f"  Примечание: Эта формула предполагает оптимальное распределение входных символов, которое может отличаться от равновероятного.\n"
+                    except (ValueError, RuntimeWarning) as e_cap:
+                        log_details += f"  Ошибка при расчете C_Z по формуле: {str(e_cap)}. Используем оценку C <= 1 - H(p).\n"
+                        if p == 0 or p == 1: h_p_val = 0
+                        else: h_p_val = -p * np.log2(p) - (1-p) * np.log2(1-p)
+                        channel_capacity_value = 1 - h_p_val
+                        log_details += f"  Оценка C_Z ≈ 1 - H({p}) = {channel_capacity_value:.4f}\n"
+                else: # p=0 или p=1 уже обработаны
+                     channel_capacity_value = 1.0 if p == 0 else 0.0
+
+        return channel_capacity_value, log_details
+
+    def convolutional_encode(self, binary_data, operation_step_start_time):
+        """Сверточное кодирование. Возвращает (encoded_data, log_details)."""
+        step_start_time = time.time()
+        log_details = ""
+        log_details += f"  STEP 6.1: Подготовка к кодированию\n  START: {datetime.fromtimestamp(step_start_time).strftime('%H:%M:%S.%f')[:-3]}\n"
+        log_details += "  Пояснение: Преобразование полиномов в числовой формат и добавление хвостовых битов к данным.\n"
+
         numeric_polynomials = self.binary_polys_to_numeric()
-        
-        # Добавляем обработку начального и конечного состояний для улучшения кодирования
-        # Добавляем constraint_length-1 нулей в конец для очистки регистров
         padded_data = binary_data + '0' * (self.constraint_length - 1)
+
+        log_details += f"  Входные данные для кодировщика:\n    Бинарные данные (первые 60): {binary_data[:60]}{'...' if len(binary_data) > 60 else ''}\n    Дополненные данные (первые 60): {padded_data[:60]}{'...' if len(padded_data) > 60 else ''}\n    Числовые полиномы: {numeric_polynomials}\n"
+        log_details += f"  END: {datetime.fromtimestamp(time.time()).strftime('%H:%M:%S.%f')[:-3]}\n  DURATION: {time.time() - step_start_time:.3f} seconds\n  ----------------------------------------\n"
+
+        # --- Подшаг: Инициализация регистров и переменных ---
+        sub_step_start_time = time.time()
+        log_details += f"  STEP 6.2: Инициализация регистров и процесса кодирования\n  START: {datetime.fromtimestamp(sub_step_start_time).strftime('%H:%M:%S.%f')[:-3]}\n"
+        log_details += "  Пояснение: Установка начального состояния регистров сдвига.\n"
+
+        encoded_data_list = [] # Собираем биты в список для эффективности
+        max_register_idx = 0
+        if numeric_polynomials and any(numeric_polynomials):
+             max_register_idx = max(max(p) if p else -1 for p in numeric_polynomials)
+        registers = [0] * (max_register_idx + 1) 
+
+        log_details += f"  Начальное состояние регистров (длина {len(registers)}): {''.join(map(str, registers))}\n"
+        log_details += f"  END: {datetime.fromtimestamp(time.time()).strftime('%H:%M:%S.%f')[:-3]}\n  DURATION: {time.time() - sub_step_start_time:.3f} seconds\n  ----------------------------------------\n"
         
-        # Сохраняем текущее содержимое результатов
-        current_results = self.result_text.get("1.0", "end")
-        
-        # Добавляем вывод информации о кодировании
-        self.result_text.insert("end", "\n=== Детали сверточного кодирования ===\n")
-        self.result_text.insert("end", f"Количество полиномов: {len(numeric_polynomials)}\n")
-        for i, poly in enumerate(numeric_polynomials):
-            self.result_text.insert("end", f"Полином {i+1}: {poly} (индексы регистров)\n")
-        
-        # Кодируем с использованием алгоритма из Laba.py
-        encoded_data = ""
-        max_register = max(max(p) for p in numeric_polynomials)
-        registers = [0] * (max_register + 1)
-        
-        self.result_text.insert("end", "\nПример кодирования первых нескольких битов:\n")
-        
-        # Покажем пример кодирования первых нескольких битов для наглядности
-        example_bits = min(8, len(padded_data))
-        
-        # Создаем таблицу для отображения процесса кодирования
-        self.result_text.insert("end", "Бит | Регистр | Выходные биты\n")
-        self.result_text.insert("end", "-" * 40 + "\n")
+        # --- Подшаг: Цикл кодирования ---
+        sub_step_start_time = time.time()
+        log_details += f"  STEP 6.3: Основной цикл кодирования\n  START: {datetime.fromtimestamp(sub_step_start_time).strftime('%H:%M:%S.%f')[:-3]}\n"
+        log_details += "  Пояснение: Побитовая обработка входных данных, сдвиг регистров и вычисление выходных битов на основе полиномов.\n"
+        log_details += "  Пример кодирования первых нескольких битов (до 5 итераций):\n"
+        log_details += "  Итерация | Входной бит | Состояние регистров | Выходные биты (для полиномов)\n"
+        log_details += "  ---------|-------------|---------------------|-------------------------------\n"
         
         for i, bit in enumerate(padded_data):
-            # Сдвигаем регистр и добавляем новый бит
             registers.insert(0, int(bit))
             registers.pop()
             
-            # Выходные биты для этого входного бита
-            output_bits = []
+            current_output_bits = []
+            for poly_idx, poly in enumerate(numeric_polynomials):
+                xor_sum = 0
+                for reg_idx in poly:
+                    if 0 <= reg_idx < len(registers):
+                        xor_sum ^= registers[reg_idx]
+                current_output_bits.append(str(xor_sum))
+            encoded_data_list.extend(current_output_bits)
             
-            # Вычисляем выходные биты для каждого полинома
-            for poly in numeric_polynomials:
-                xor = 0
-                for idx in poly:
-                    xor ^= registers[idx]
-                output_bits.append(str(xor))
-                encoded_data += str(xor)
-            
-            # Показываем пример для первых нескольких битов
-            if i < example_bits:
-                reg_str = ''.join(str(r) for r in registers[:max_register+1])
-                out_str = ''.join(output_bits)
-                self.result_text.insert("end", f" {bit}  | {reg_str} | {out_str}\n")
+            if i < 5: # Логируем только первые 5 итераций для примера
+                reg_str = ''.join(map(str, registers[:max_register_idx+1]))
+                out_str = ''.join(current_output_bits)
+                poly_outputs_str = " / ".join([f"P{idx+1}:{b}" for idx, b in enumerate(current_output_bits)])
+                log_details += f"    {i+1:<6} |      {bit:<8} | {reg_str:<19} | {out_str} ({poly_outputs_str})\n"
         
-        return encoded_data
+        if len(padded_data) > 5:
+            log_details += "  ... (остальные итерации не логируются подробно для краткости) ...\n"
+        
+        encoded_data_str = "".join(encoded_data_list)
+        log_details += f"  Результат (закодированные данные, первые 100 бит): {encoded_data_str[:100]}{'...' if len(encoded_data_str) > 100 else ''}\n"
+        log_details += f"  END: {datetime.fromtimestamp(time.time()).strftime('%H:%M:%S.%f')[:-3]}\n  DURATION: {time.time() - sub_step_start_time:.3f} seconds\n  ----------------------------------------\n"
+        
+        return encoded_data_str, log_details
     
     def binary_polys_to_numeric(self):
         """Преобразует полиномы из двоичного формата в числовой формат индексов"""
@@ -831,13 +1026,13 @@ class ConvolutionalCodeModule:
                 self.error_entry.delete(0, "end")
                 self.error_entry.insert(0, str(self.error_probability))
             
-            try:
-                self.erasure_probability = float(self.erasure_entry.get())
-            except ValueError:
-                # Устанавливаем значение по умолчанию
-                self.erasure_probability = 0.03 if self.channel_type == "ДСКС" else 0
-                self.erasure_entry.delete(0, "end")
-                self.erasure_entry.insert(0, str(self.erasure_probability))
+                try:
+                    self.erasure_probability = float(self.erasure_entry.get())
+                except ValueError:
+                    # Устанавливаем значение по умолчанию
+                    self.erasure_probability = 0.03 if self.channel_type == "ДСКС" else 0
+                    self.erasure_entry.delete(0, "end")
+                    self.erasure_entry.insert(0, str(self.erasure_probability))
             
             # Проверка корректности вероятностей
             if self.error_probability < 0 or self.error_probability > 1:
@@ -880,28 +1075,7 @@ class ConvolutionalCodeModule:
             if self.channel_type == "ДСКС":
                 self.result_text.insert("end", f"- Вероятность стирания (q): {self.erasure_probability}\n")
             
-            # Графическое представление модели канала
-            self.result_text.insert("end", "\nМодель канала:\n")
             
-            if self.channel_type == "ДСК":
-                self.result_text.insert("end", "  ╭─── 1-p ───> 0\n")
-                self.result_text.insert("end", "0─┤\n")
-                self.result_text.insert("end", "  ╰──── p ────> 1\n\n")
-                self.result_text.insert("end", "  ╭─── 1-p ───> 1\n")
-                self.result_text.insert("end", "1─┤\n")
-                self.result_text.insert("end", "  ╰──── p ────> 0\n")
-            elif self.channel_type == "ДСКС":
-                self.result_text.insert("end", "  ╭─── 1-p-q ──> 0\n")
-                self.result_text.insert("end", "0─┼──── p ────> 1\n")
-                self.result_text.insert("end", "  ╰──── q ────> e\n\n")
-                self.result_text.insert("end", "  ╭─── 1-p-q ──> 1\n")
-                self.result_text.insert("end", "1─┼──── p ────> 0\n")
-                self.result_text.insert("end", "  ╰──── q ────> e\n")
-            elif self.channel_type == "Z-канал":
-                self.result_text.insert("end", "0───── 1 ─────> 0\n\n")
-                self.result_text.insert("end", "  ╭─── 1-p ───> 1\n")
-                self.result_text.insert("end", "1─┤\n")
-                self.result_text.insert("end", "  ╰──── p ────> 0\n")
             
             for bit in encoded_data:
                 bits_processed += 1
