@@ -4,10 +4,9 @@ import pickle
 import zlib
 import time
 import os
-import math
 from datetime import datetime
 from tqdm import tqdm
-from .frame_processor import FrameProcessor
+from .frame_processor import FrameProcessor, BLOCK_SIZE
 from config import *
 
 class VideoEncoder:
@@ -33,6 +32,10 @@ class VideoEncoder:
         self.original_size = 0
         self.compressed_size = 0
         self.metadata = {}
+        # Инициализация атрибутов для хранения информации о видео
+        self.width = 0
+        self.height = 0
+        self.fps = 0
 
     def _save_metadata(self, file):
         """
@@ -40,11 +43,43 @@ class VideoEncoder:
         
         :param file: Файловый объект для записи
         """
-        self.metadata['fps'] = self.fps
-        self.metadata['width'] = self.width
-        self.metadata['height'] = self.height
-        self.metadata['total_frames'] = self.total_frames
-        pickle.dump(self.metadata, file)
+        # Сохраняем все необходимые метаданные
+        self.metadata = {
+            'fps': self.fps,
+            'width': self.width,
+            'height': self.height,
+            'total_frames': self.total_frames,
+            'quality': self.quality,
+            'keyframe_interval': self.keyframe_interval,
+            'version': '1.0',
+            'created': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        if self.verbose:
+            print(f"Сохранение метаданных: {self.metadata}")
+        
+        try:
+            # Сериализуем метаданные в байты
+            metadata_bytes = pickle.dumps(self.metadata)
+            
+            if self.verbose:
+                print(f"Размер сериализованных метаданных: {len(metadata_bytes)} байт")
+                print(f"Первые 20 байт (hex): {' '.join(f'{b:02x}' for b in metadata_bytes[:20])}")
+            
+            # Записываем размер метаданных и сами метаданные
+            file.write(len(metadata_bytes).to_bytes(4, byteorder='big'))
+            file.write(metadata_bytes)
+            file.flush()  # Убедимся, что данные записаны на диск
+            
+            if self.verbose:
+                print("Метаданные успешно записаны в файл")
+                
+        except Exception as e:
+            error_msg = f"Ошибка при сохранении метаданных: {str(e)}"
+            if self.verbose:
+                import traceback
+                error_msg += f"\n\nТрассировка:\n{traceback.format_exc()}"
+            raise Exception(error_msg)
 
     def _format_size(self, size_bytes):
         """
@@ -132,22 +167,28 @@ class VideoEncoder:
             print(f"{'Средняя скорость:':<20} {total_frames/elapsed:.2f} к/с" if elapsed > 0 else "")
             print("=" * 70 + "\n")
 
-    def _save_to_file(self, metadata, frames_data):
+    def _save_to_file(self, frames_data):
         """
         Сохранение сжатых данных в файл
         
-        :param metadata: Метаданные видео
         :param frames_data: Список сжатых кадров
         """
-        with open(self.output_file, 'wb') as f:
-            # Сначала сохраняем метаданные
-            self._save_metadata(f)
-            
-            # Обработка и сохранение каждого кадра
-            for frame in frames_data:
-                compressed_data = zlib.compress(pickle.dumps(frame))
-                f.write(len(compressed_data).to_bytes(4, byteorder='big'))
-                f.write(compressed_data)
+        try:
+            with open(self.output_file, 'wb') as f:
+                # Сохраняем метаданные (они уже содержат все необходимые поля)
+                self._save_metadata(f)
+                
+                # Обработка и сохранение каждого кадра
+                for frame in frames_data:
+                    frame_bytes = pickle.dumps(frame)
+                    compressed_data = zlib.compress(frame_bytes)
+                    f.write(len(compressed_data).to_bytes(4, byteorder='big'))
+                    f.write(compressed_data)
+                    
+        except Exception as e:
+            if os.path.exists(self.output_file):
+                os.remove(self.output_file)
+            raise Exception(f"Ошибка при сохранении файла: {str(e)}")
         
         # Расчет статистики сжатия
         original_size = sum(frame.nbytes for frame in frames_data if hasattr(frame, 'nbytes'))
@@ -246,7 +287,7 @@ class VideoEncoder:
             pbar.close()
 
         # Сохранение в файл
-        self._save_to_file(metadata, frames_data)
+        self._save_to_file(frames_data)
         
         # Вывод итоговой статистики, если не используется подробный вывод
         if not self.verbose and frame_count > 0:
