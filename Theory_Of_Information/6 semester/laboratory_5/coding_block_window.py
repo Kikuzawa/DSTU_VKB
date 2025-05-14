@@ -5,10 +5,10 @@ import re
 import time
 from datetime import datetime
 from tkinter import messagebox
-from helpers import text_to_binary, binary_to_text
+from helpful_utils import text_to_binary, binary_to_text
 
 
-class BlockCodeModule:
+class CodingBlock:
     def __init__(self, parent):
         self.parent = parent
         self.n = 7  # Общее количество бит в кодовом слове (по умолчанию 7)

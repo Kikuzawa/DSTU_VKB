@@ -4,14 +4,14 @@ import random
 import os
 from PIL import Image, ImageTk
 from tkinter import filedialog
-from block_code import BlockCodeModule
-from convolutional_code import ConvolutionalCodeModule
+from coding_block_window import CodingBlock
+from coding_convolutional_window import CodingConvolutional
 
 # Настройка темы и стиля приложения
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("green")
 
-class CommunicationChannelApp(ctk.CTk):
+class ChannelApp(ctk.CTk):
     def __init__(self):
         super().__init__()
         
@@ -49,8 +49,8 @@ class CommunicationChannelApp(ctk.CTk):
         self.create_bottom_menu()
         
         # Создание модулей для работы с кодами
-        self.block_code_module = BlockCodeModule(self)
-        self.convolutional_code_module = ConvolutionalCodeModule(self)
+        self.block_code_module = CodingBlock(self)
+        self.convolutional_code_module = CodingConvolutional(self)
         
         # Показать стартовую страницу
         self.show_module("block_code")
@@ -67,7 +67,7 @@ class CommunicationChannelApp(ctk.CTk):
         
         # Информация о работе (слева)
         self.info_label = ctk.CTkLabel(self.bottom_menu,
-                                     text="Лабораторная работа: Адаптивные системы и модели каналов связи",
+                                     text="Лабораторная работа 5 - Theory Information",
                                      font=ctk.CTkFont(size=12),
                                      text_color=self.text_color)
         self.info_label.grid(row=0, column=0, padx=20, pady=5, sticky="w")
@@ -98,7 +98,7 @@ class CommunicationChannelApp(ctk.CTk):
         
         # Версия программы (справа)
         version_label = ctk.CTkLabel(self.bottom_menu,
-                                   text="v1.0",
+                                   text="kikuzawa",
                                    font=ctk.CTkFont(size=12),
                                    text_color="#666666")
         version_label.grid(row=0, column=2, padx=20, pady=5, sticky="e")
@@ -138,5 +138,5 @@ class CommunicationChannelApp(ctk.CTk):
         return None
 
 if __name__ == "__main__":
-    app = CommunicationChannelApp()
+    app = ChannelApp()
     app.mainloop() 
